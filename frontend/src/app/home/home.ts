@@ -87,6 +87,8 @@ export class Home implements OnInit {
         this.isLoading = false;
       }
     });
+    
+
   }
 
 
