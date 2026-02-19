@@ -1,54 +1,54 @@
 package br.edu.ufape.roomie.service;
 
-import br.edu.ufape.roomie.dto.AddressDTO;
 import br.edu.ufape.roomie.dto.PropertyRequestDTO;
 import br.edu.ufape.roomie.enums.PropertyStatus;
 import br.edu.ufape.roomie.model.Address;
 import br.edu.ufape.roomie.model.Property;
 import br.edu.ufape.roomie.model.User;
 import br.edu.ufape.roomie.repository.PropertyRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class PropertyService {
 
-    @Autowired
-    private PropertyRepository propertyRepository;
+    private final PropertyRepository propertyRepository;
 
-    public Property saveProperty(PropertyRequestDTO requestDTO) {
-        User owner = getAuthenticatedUser();
+    public PropertyService(PropertyRepository propertyRepository) {
+        this.propertyRepository = propertyRepository;
+    }
+
+    @Transactional
+    public Property createProperty(PropertyRequestDTO dto) {
+        User owner = this.getAuthenticatedUser();
 
         Property property = new Property();
-        property.setTitle(requestDTO.getTitle());
-        property.setDescription(requestDTO.getDescription());
-        property.setType(requestDTO.getType());
-        property.setPrice(requestDTO.getPrice());
-        property.setGender(requestDTO.getGender());
-        property.setAcceptAnimals(requestDTO.getAcceptAnimals());
-        property.setAvailableVacancies(requestDTO.getAvailableVacancies());
-        property.setStatus(PropertyStatus.DRAFT);
         property.setOwner(owner);
+        property.setTitle(dto.getTitle());
+        property.setDescription(dto.getDescription());
+        property.setType(dto.getType());
+        property.setPrice(dto.getPrice());
+        property.setGender(dto.getGender());
+        property.setAcceptAnimals(dto.getAcceptAnimals());
+        property.setAvailableVacancies(dto.getAvailableVacancies());
+        property.setStatus(PropertyStatus.DRAFT);
 
-        Property savedProperty = propertyRepository.save(property);
-
-        AddressDTO addressDTO = requestDTO.getAddress();
         Address address = new Address();
-        address.setStreet(addressDTO.getStreet());
-        address.setDistrict(addressDTO.getDistrict());
-        address.setNumber(addressDTO.getNumber());
-        address.setCity(addressDTO.getCity());
-        address.setState(addressDTO.getState());
-        address.setCep(addressDTO.getCep());
-        address.setProperty(savedProperty);
+        address.setStreet(dto.getAddress().getStreet());
+        address.setDistrict(dto.getAddress().getDistrict());
+        address.setNumber(dto.getAddress().getNumber());
+        address.setCity(dto.getAddress().getCity());
+        address.setState(dto.getAddress().getState());
+        address.setCep(dto.getAddress().getCep());
 
-        savedProperty.setAddress(address);
+        address.setProperty(property);
+        property.setAddress(address);
 
-        return propertyRepository.save(savedProperty);
+        return propertyRepository.save(property);
     }
 
     public Property publishProperty(Long propertyId) {
