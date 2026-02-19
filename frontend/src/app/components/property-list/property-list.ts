@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PropertyService } from '../../services/propertyService';
 import { Property } from '../../models/property';
@@ -12,8 +12,8 @@ import { PropertyCard } from '../property-card/property-card';
   styleUrl: './property-list.css',
 })
 export class PropertyList implements OnInit {
-  properties: Property[] = [];
-  loading = false;
+  @Input() properties: Property[] = [];
+  @Input() loading = false;
 
   constructor(private propertyService: PropertyService) {}
 
