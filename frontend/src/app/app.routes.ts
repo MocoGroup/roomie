@@ -3,7 +3,9 @@ import { authGuard } from './auth/auth-guard';
 import { Login } from './auth/login/login';
 import { Unauthorized } from './auth/unauthorized/unauthorized';
 import { Home } from './home/home';
-import { PropertyFormComponent } from './property-form/property-form'; 
+import { PropertyFormComponent } from './property-form/property-form';
+import { ProfileEditComponent } from './components/profile/profile-edit.component';
+import { StudentProfileComponent } from './components/student-profile/student-profile.component';
 
 export const routes: Routes = [
   {
@@ -32,12 +34,23 @@ export const routes: Routes = [
     canActivate: [authGuard],
     title: 'Início - Roomie'
   },
-
   {
-    path: 'properties/new', 
+    path: 'properties/new',
     component: PropertyFormComponent,
-    canActivate: [authGuard], 
-    title: 'Novo Imóvel - Roomie'
+    canActivate: [authGuard],
+    title: 'Cadastrar Imóvel - Roomie'
+  },
+  {
+    path: 'profile',
+    component: ProfileEditComponent,
+    canActivate: [authGuard],
+    title: 'Meu Perfil - Roomie'
+  },
+  {
+    path: 'student-profile',
+    component: StudentProfileComponent,
+    canActivate: [authGuard],
+    title: 'Minha Instituição - Roomie'
   },
   {
     path: '**',

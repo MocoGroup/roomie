@@ -68,6 +68,13 @@ export class Auth {
     return user?.role === requiredRole;
   }
 
+  updateCurrentUser(updates: Partial<User>): void {
+    const current = this.currentUserSubject.value;
+    if (current) {
+      this.currentUserSubject.next({ ...current, ...updates });
+    }
+  }
+
   private checkToken() {
     const token = localStorage.getItem('token');
     if (token) {

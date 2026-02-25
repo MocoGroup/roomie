@@ -1,0 +1,54 @@
+<app-header [showCreateProperty]="false"></app-header>
+
+<div class="container">
+  <h2>Editar Perfil</h2>
+  <p class="subtitle">Mantenha seus dados atualizados no Roomie.</p>
+
+  <div class="alert success" *ngIf="successMessage">
+    <span class="material-icons">check_circle</span> {{ successMessage }}
+  </div>
+  <div class="alert error" *ngIf="errorMessage">
+    <span class="material-icons">error</span> {{ errorMessage }}
+  </div>
+
+  <!-- Aviso de servidor lento (ex: Render cold start) -->
+  <div class="alert slow" *ngIf="slowRequest">
+    <span class="material-icons">hourglass_top</span>
+    O servidor está acordando, aguarde mais alguns segundos...
+  </div>
+
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+      <label>Nome Completo</label>
+      <input type="text" formControlName="name" placeholder="Seu nome">
+    </div>
+
+    <div class="form-group">
+      <label>E-mail</label>
+      <input type="email" formControlName="email" placeholder="seuemail@exemplo.com">
+    </div>
+
+    <hr>
+    <h3>Alterar Senha</h3>
+    <p class="subtitle">Deixe em branco se não quiser alterar.</p>
+
+    <div class="form-row">
+      <div class="form-group half">
+        <label>Senha Atual</label>
+        <input type="password" formControlName="currentPassword" placeholder="********">
+      </div>
+
+      <div class="form-group half">
+        <label>Nova Senha</label>
+        <input type="password" formControlName="newPassword" placeholder="********">
+      </div>
+    </div>
+
+    <button type="submit" class="btn-save" [disabled]="isLoading">
+      <span class="spinner" *ngIf="isLoading"></span>
+      {{ isLoading ? 'Salvando...' : 'Salvar Alterações' }}
+    </button>
+
+  </form>
+</div>

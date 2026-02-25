@@ -1,26 +1,18 @@
 <ng-container *ngIf="!hasSearched">
   <div class="hero-container">
 
-    <header class="topbar-blue">
-      <h2 class="logo-text">Roomie</h2>
-      <div class="header-buttons">
-        <button class="profile-btn" (click)="goToCreateProperty()">+ Anunciar Imóvel</button>
-
-        <button class="profile-btn" (click)="goToProfile()">Meu Perfil</button>
-        <button class="profile-btn" (click)="onLogout()">Sair</button>
-      </div>
-    </header>
+    <app-header></app-header>
 
     <div class="hero-content">
       <h1>Encontre seu novo lar.</h1>
       <p>Repúblicas, quartos e apartamentos para dividir com a sua vibe.</p>
 
       <div class="big-search-box">
-        <input 
-          type="text" 
-          [formControl]="initialSearch" 
+        <input
+          type="text"
+          [formControl]="initialSearch"
           placeholder="Para qual cidade ou bairro você vai?"
-          (keyup.enter)="onInitialSearch()" 
+          (keyup.enter)="onInitialSearch()"
         />
         <button class="btn-big-search" (click)="onInitialSearch()">Buscar</button>
       </div>
@@ -31,16 +23,7 @@
 <ng-container *ngIf="hasSearched">
   <div class="dashboard-container">
 
-    <header class="topbar-blue">
-      <h2 class="logo-text" (click)="goBackHome()" style="cursor: pointer;" title="Voltar ao Início">Roomie</h2>
-      <div class="header-buttons">
-        <button class="profile-btn" (click)="goToCreateProperty()">+ Anunciar Imóvel</button>
-
-        <button class="profile-btn" (click)="goToProfile()">Meu Perfil</button>
-        <button class="profile-btn" (click)="onLogout()">Sair</button>
-      </div>
-      
-    </header>
+    <app-header (logoClicked)="goBackHome()"></app-header>
 
     <div class="search-section" [formGroup]="filterForm">
       <div class="search-bar">
@@ -96,11 +79,10 @@
           <p>Mostrando imóveis para: <strong>{{ appliedLocation || 'Qualquer lugar' }}</strong></p>
         </div>
 
-        <app-property-list 
-           [properties]="properties" 
+        <app-property-list
+           [properties]="properties"
            [loading]="isLoading">
         </app-property-list>
-
       </section>
 
     </div>

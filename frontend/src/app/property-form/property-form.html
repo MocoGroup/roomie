@@ -1,10 +1,4 @@
-<header class="topbar-blue">
-  <h2 class="logo-text" (click)="goBackHome()" style="cursor: pointer;" title="Voltar ao Início">Roomie</h2>
-  <div class="header-buttons">
-    <button class="profile-btn" (click)="goToProfile()">Meu Perfil</button>
-    <button class="profile-btn" (click)="onLogout()">Sair</button>
-  </div>
-</header>
+<app-header [showCreateProperty]="false"></app-header>
 
 <div class="container">
   <h2>Cadastrar Imóvel</h2>

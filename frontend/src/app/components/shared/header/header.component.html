@@ -1,0 +1,63 @@
+<header class="topbar-blue">
+  <h2 class="logo-text" (click)="onLogoClick()" title="Início">Roomie</h2>
+
+  <div class="header-buttons">
+    <button *ngIf="showCreateProperty" class="outline-btn" (click)="goToCreateProperty()">
+      + Cadastrar Imóvel
+    </button>
+
+    <div class="user-menu-wrapper" *ngIf="user$ | async as user">
+      <button class="user-button" (click)="toggleMenu()">
+        <span class="user-initials">{{ getInitials(user.name) }}</span>
+        <span class="arrow-down">▾</span>
+      </button>
+
+      <div class="user-dropdown" *ngIf="isMenuOpen">
+
+        <!-- Cabeçalho com nome e e-mail -->
+        <div class="dropdown-user-info">
+          <div class="dropdown-avatar">{{ getInitials(user.name) }}</div>
+          <div class="dropdown-user-text">
+            <strong>{{ user.name }}</strong>
+            <span>{{ user.email }}</span>
+          </div>
+        </div>
+
+        <hr>
+
+        <ul>
+          <li (click)="goToProfile()">
+            <span class="material-icons">person_outline</span>
+            Minha conta
+          </li>
+
+          <li>
+            <span class="material-icons">favorite_border</span>
+            Favoritos
+          </li>
+
+          <li (click)="goToCreateProperty()">
+            <span class="material-icons">add_circle_outline</span>
+            Cadastrar Imóvel
+          </li>
+
+          <!-- Visível apenas para não-administradores -->
+          <li *ngIf="user.role !== 'ADMIN'" (click)="goToStudentProfile()">
+            <span class="material-icons">school</span>
+            Minha Instituição
+          </li>
+
+          <hr>
+
+          <li class="logout-item" (click)="onLogout()">
+            <span class="material-icons">logout</span>
+            Sair
+          </li>
+        </ul>
+
+      </div>
+    </div>
+  </div>
+</header>
+
+

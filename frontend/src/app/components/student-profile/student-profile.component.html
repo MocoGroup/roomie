@@ -1,0 +1,62 @@
+<app-header [showCreateProperty]="false"></app-header>
+
+<div class="page-wrapper">
+  <div class="container">
+
+    <div class="page-header">
+      <span class="material-icons page-icon">school</span>
+      <div>
+        <h2>Minha Instituição</h2>
+        <p class="subtitle">Informe sua faculdade e curso para encontrar moradia ainda mais próxima de você.</p>
+      </div>
+    </div>
+
+    <div class="alert success" *ngIf="successMessage">
+      <span class="material-icons">check_circle</span>
+      {{ successMessage }}
+    </div>
+    <div class="alert error" *ngIf="errorMessage">
+      <span class="material-icons">error</span>
+      {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="studentForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label for="institution">Instituição de Ensino</label>
+        <input
+          id="institution"
+          type="text"
+          formControlName="institution"
+          placeholder="Ex: Universidade Federal do Agreste de Pernambuco"
+        />
+        <div class="field-error" *ngIf="studentForm.get('institution')?.invalid && studentForm.get('institution')?.touched">
+          Informe o nome da sua instituição (mín. 3 caracteres).
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="major">Curso</label>
+        <input
+          id="major"
+          type="text"
+          formControlName="major"
+          placeholder="Ex: Ciência da Computação"
+        />
+        <div class="field-error" *ngIf="studentForm.get('major')?.invalid && studentForm.get('major')?.touched">
+          Informe o nome do seu curso (mín. 3 caracteres).
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-back" (click)="goBack()">Voltar</button>
+        <button type="submit" class="btn-save" [disabled]="isLoading">
+          <span class="material-icons" *ngIf="!isLoading">save</span>
+          {{ isLoading ? 'Salvando...' : 'Salvar' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+

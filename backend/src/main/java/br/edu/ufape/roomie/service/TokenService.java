@@ -25,6 +25,9 @@ public class TokenService {
             return JWT.create()
                     .withIssuer("roomie-api")
                     .withSubject(user.getEmail())
+                    .withClaim("id", user.getId())
+                    .withClaim("name", user.getName())
+                    .withClaim("role", user.getRole().name())
                     .withExpiresAt(genExpirationDate())
                     .sign(algorithm);
         }catch (JWTCreationException exception) {

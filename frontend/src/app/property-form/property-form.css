@@ -4,46 +4,6 @@
   font-family: 'Raleway', sans-serif;
 }
 
-/* === TOPBAR AZUL === */
-.topbar-blue {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #0D83D7; 
-  padding: 15px 40px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  z-index: 10;
-}
-
-.header-buttons {
-  display: flex;
-  gap: 15px;
-}
-
-
-.topbar-blue .logo-text {
-  color: white; 
-  margin: 0;
-  font-weight: 800;
-  font-size: 26px;
-}
-
-.profile-btn {
-  background: transparent;
-  border: 2px solid white;
-  color: white;
-  padding: 8px 25px;
-  border-radius: 50px; 
-  cursor: pointer;
-  font-weight: bold;
-  transition: all 0.3s ease;
-}
-
-.profile-btn:hover {
-  background: white;
-  color: #0D83D7;
-}
-
 
 /* O resto do seu CSS continua aqui para baixo... */
 .container {

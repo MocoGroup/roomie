@@ -1,0 +1,156 @@
+:host {
+  display: block;
+  font-family: 'Raleway', sans-serif;
+  background-color: #f6f5f7;
+  min-height: 100vh;
+}
+
+.page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 50px 20px;
+  min-height: calc(100vh - 70px);
+}
+
+.container {
+  width: 100%;
+  max-width: 580px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 40px 45px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+}
+
+/* Cabeçalho da página */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.page-icon {
+  font-size: 42px;
+  color: #0D83D7;
+  flex-shrink: 0;
+}
+
+.page-header h2 {
+  margin: 0 0 4px 0;
+  color: #1a1a1a;
+  font-size: 22px;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 13px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Alertas */
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 24px;
+  font-weight: 500;
+}
+
+.alert .material-icons { font-size: 20px; }
+.alert.success { background: #e8f5e9; color: #2e7d32; }
+.alert.error   { background: #fdecea; color: #c62828; }
+
+/* Grupos de formulário */
+.form-group {
+  margin-bottom: 22px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #444;
+  margin-bottom: 8px;
+}
+
+.form-group input {
+  padding: 13px 16px;
+  border: 1.5px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'Raleway', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+  border-color: #0D83D7;
+}
+
+.field-error {
+  color: #c62828;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+/* Botões */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.btn-back {
+  background: transparent;
+  border: 1.5px solid #ccc;
+  color: #666;
+  padding: 12px 26px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-back:hover {
+  border-color: #999;
+  color: #333;
+}
+
+.btn-save {
+  background: #0D83D7;
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+
+.btn-save:hover:not(:disabled) {
+  background: #0a66a8;
+}
+
+.btn-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-save .material-icons {
+  font-size: 18px;
+}
+
