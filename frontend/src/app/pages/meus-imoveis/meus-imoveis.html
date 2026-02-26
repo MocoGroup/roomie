@@ -1,5 +1,29 @@
 <h2>Meus Imóveis</h2>
 
+<!-- Painel de estatísticas do proprietário -->
+<div class="stats-panel" *ngIf="ownerReport">
+  <div class="stat-card">
+    <span class="stat-label">Imóveis cadastrados</span>
+    <span class="stat-value">{{ ownerReport.totalImoveis }}</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-label">Total de vagas</span>
+    <span class="stat-value">{{ ownerReport.totalVagasOferecidas }}</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-label">Preço médio</span>
+    <span class="stat-value">R$ {{ ownerReport.mediaPrecoImoveis | number:'1.2-2' }}</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-label">Menor preço</span>
+    <span class="stat-value">R$ {{ ownerReport.menorPreco | number:'1.0-0' }}</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-label">Maior preço</span>
+    <span class="stat-value">R$ {{ ownerReport.maiorPreco | number:'1.0-0' }}</span>
+  </div>
+</div>
+
 <div *ngIf="properties.length === 0">
   Nenhum imóvel cadastrado.
 </div>

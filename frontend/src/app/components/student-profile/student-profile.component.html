@@ -57,6 +57,54 @@
       </div>
 
     </form>
+
+    <!-- Seção de telefones de contato -->
+    <div class="phones-section">
+      <h3 class="phones-title">
+        <span class="material-icons">phone</span>
+        Telefones de contato
+      </h3>
+
+      <div class="alert success" *ngIf="phonesSuccess">
+        <span class="material-icons">check_circle</span>
+        {{ phonesSuccess }}
+      </div>
+      <div class="alert error" *ngIf="phonesError">
+        <span class="material-icons">error</span>
+        {{ phonesError }}
+      </div>
+
+      <ul class="phones-list" *ngIf="phones.length > 0">
+        <li *ngFor="let phone of phones; let i = index" class="phone-item">
+          <span class="material-icons">phone_iphone</span>
+          {{ phone }}
+          <button class="btn-remove-phone" (click)="removePhone(i)" title="Remover">
+            <span class="material-icons">close</span>
+          </button>
+        </li>
+      </ul>
+      <p class="no-phones" *ngIf="phones.length === 0">Nenhum telefone cadastrado.</p>
+
+      <div class="add-phone-row">
+        <input
+          type="tel"
+          [formControl]="newPhoneControl"
+          placeholder="Ex: (81) 99999-0000"
+          (keyup.enter)="addPhone()"
+        />
+        <button class="btn-add-phone" (click)="addPhone()" [disabled]="newPhoneControl.invalid || !newPhoneControl.value">
+          <span class="material-icons">add</span>
+          Adicionar
+        </button>
+      </div>
+
+      <div class="phones-actions">
+        <button class="btn-save" (click)="savePhones()" [disabled]="isSavingPhones">
+          {{ isSavingPhones ? 'Salvando...' : 'Salvar telefones' }}
+        </button>
+      </div>
+    </div>
+
   </div>
 </div>
 

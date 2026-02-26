@@ -43,6 +43,16 @@ public class UserService {
             }
             user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         }
+
+        if (dto.getPhones() != null) {
+            user.getTelefones().clear();
+            for (String numero : dto.getPhones()) {
+                if (numero != null && !numero.isBlank()) {
+                    user.addTelefone(numero);
+                }
+            }
+        }
+
         return userRepository.save(user);
     }
 }

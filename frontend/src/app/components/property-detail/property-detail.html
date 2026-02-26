@@ -57,9 +57,13 @@
         <p class="cep">CEP: {{ property.address.cep }}</p>
       </div>
 
-      <div class="owner-block" *ngIf="property.owner">
+      <div class="owner-block" *ngIf="property.owner || detail">
         <h3>Anunciante</h3>
-        <p>{{ property.owner.name }}</p>
+        <p>{{ detail?.nomeProprietario ?? property.owner?.name }}</p>
+        <p *ngIf="detail?.emailProprietario" class="owner-email">
+          <span class="material-icons" style="font-size:14px;vertical-align:middle">email</span>
+          {{ detail!.emailProprietario }}
+        </p>
       </div>
     </div>
 

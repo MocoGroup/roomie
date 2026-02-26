@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Property } from '../models/property';
+import { PropertyDetailView } from '../models/property-detail-view';
 import { environment } from '../../enviroments/enviroment';
 
 
@@ -27,6 +28,14 @@ export class PropertyService {
 
   publishProperty(id: number): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${id}/publish`, {});
+  }
+
+  getAllDetails(): Observable<PropertyDetailView[]> {
+    return this.http.get<PropertyDetailView[]>(`${this.apiUrl}/details`);
+  }
+
+  getDetailById(id: number): Observable<PropertyDetailView> {
+    return this.http.get<PropertyDetailView>(`${this.apiUrl}/${id}/details`);
   }
 
 }

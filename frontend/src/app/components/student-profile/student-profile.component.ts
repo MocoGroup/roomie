@@ -1,9 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth } from '../../auth/auth';
 import { StudentService } from '../../services/student.service';
+import { UserService } from '../../services/user.service';
 import { HeaderComponent } from '../shared/header/header.component';
 import { take } from 'rxjs';
 
@@ -16,19 +17,45 @@ import { take } from 'rxjs';
 })
 export class StudentProfileComponent implements OnInit {
   studentForm!: FormGroup;
+  newPhoneControl = new FormControl('', Validators.pattern(/^[\d\s()+-]{7,20}$/));
+
+  phones: string[] = [];
   isLoading = false;
+  isSavingPhones = false;
   successMessage = '';
   errorMessage = '';
+  phonesSuccess = '';
+  phonesError = '';
 
   private fb = inject(FormBuilder);
   private auth = inject(Auth);
   private studentService = inject(StudentService);
+  private userService = inject(UserService);
   private router = inject(Router);
 
   ngOnInit(): void {
     this.studentForm = this.fb.group({
       institution: ['', [Validators.required, Validators.minLength(3)]],
       major: ['', [Validators.required, Validators.minLength(3)]]
+    });
+    this.loadContactData();
+  }
+
+  loadContactData(): void {
+    this.auth.currentUser$.pipe(take(1)).subscribe(user => {
+      if (!user) return;
+      this.studentService.getById(user.id).subscribe({
+        next: (contact) => {
+          this.studentForm.patchValue({
+            institution: contact.instituicao ?? '',
+            major: contact.curso ?? ''
+          });
+          this.phones = contact.telefones
+            ? contact.telefones.split(',').map(p => p.trim()).filter(Boolean)
+            : [];
+        },
+        error: () => { /* estudante ainda não tem perfil */ }
+      });
     });
   }
 
@@ -89,6 +116,36 @@ export class StudentProfileComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/home']);
+  }
+
+  addPhone(): void {
+    const num = this.newPhoneControl.value?.trim();
+    if (!num || this.newPhoneControl.invalid) return;
+    if (!this.phones.includes(num)) {
+      this.phones = [...this.phones, num];
+    }
+    this.newPhoneControl.reset();
+  }
+
+  removePhone(index: number): void {
+    this.phones = this.phones.filter((_, i) => i !== index);
+  }
+
+  savePhones(): void {
+    this.isSavingPhones = true;
+    this.phonesSuccess = '';
+    this.phonesError = '';
+
+    this.userService.updateProfile({ phones: this.phones }).subscribe({
+      next: () => {
+        this.isSavingPhones = false;
+        this.phonesSuccess = 'Telefones salvos com sucesso!';
+      },
+      error: () => {
+        this.isSavingPhones = false;
+        this.phonesError = 'Erro ao salvar telefones. Tente novamente.';
+      }
+    });
   }
 }
 
