@@ -94,7 +94,7 @@ public class RoomieDataSeeder implements CommandLineRunner {
             property.setAcceptAnimals(faker.bool().bool());
             property.setHasGarage(faker.bool().bool());
             property.setAvailableVacancies(faker.number().numberBetween(1, 5));
-            property.setStatus(PropertyStatus.values()[random.nextInt(PropertyStatus.values().length)]);
+            property.setStatus(PropertyStatus.ACTIVE);
 
             Address address = new Address();
             address.setProperty(property);
