@@ -58,3 +58,5 @@ jobs:
           -Dsonar.organization=mocogroup 
           -Dsonar.host.url=https://sonarcloud.io 
           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+          -Dsonar.security.exclusions=src/test/**
+          -Dsonar.exclusions=src/test/resources/**
