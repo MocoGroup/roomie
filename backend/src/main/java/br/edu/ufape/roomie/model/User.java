@@ -15,6 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "usuario")
+@Inheritance(strategy = InheritanceType.JOINED)
 @Data
 @NoArgsConstructor
 public class User implements UserDetails {

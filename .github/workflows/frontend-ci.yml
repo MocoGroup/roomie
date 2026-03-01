@@ -1,4 +1,4 @@
-name: frontend-ci.yml
+name: Frontend CI
 on:
   push:
     branches: [ main ]
