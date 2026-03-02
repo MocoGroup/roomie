@@ -1,6 +1,7 @@
 package br.edu.ufape.roomie.controller;
 
 import br.edu.ufape.roomie.dto.PropertyRequestDTO;
+import br.edu.ufape.roomie.dto.PropertyResponseDTO;
 import br.edu.ufape.roomie.enums.PropertyStatus;
 import br.edu.ufape.roomie.model.Property;
 import br.edu.ufape.roomie.model.User;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -82,6 +86,16 @@ public class PropertyController {
         List<PropertyDetailView> properties = propertyRepository.findMyDetails(user.getEmail());
         return ResponseEntity.ok(properties);
     }
+
+    @GetMapping("/announcements/{id}")
+    public ResponseEntity<PropertyResponseDTO> getDetails(@PathVariable Long id) {
+        return ResponseEntity.ok(propertyService.getPropertyDetails(id));
+    }
+
+    public String getMethodName(@RequestParam String param) {
+        return new String();
+    }
+    
 
     @PatchMapping("/{id}/publish")
     public ResponseEntity<?> publishProperty(@PathVariable Long id, Authentication authentication) {
