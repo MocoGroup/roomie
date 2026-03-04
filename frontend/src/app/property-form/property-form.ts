@@ -176,7 +176,7 @@ export class PropertyFormComponent implements OnInit {
             this.submitSuccess = true;
             this.submitError = '';
             this.isSubmitting = false;
-            setTimeout(() => this.router.navigate(['/home'], {queryParams: {from: 'create'}}), 1500);
+            setTimeout(() => this.router.navigate(['/meus-imoveis']), 1500);
           },
           error: (err) => {
             console.error('Erro ao salvar imóvel:', err);
