@@ -194,7 +194,7 @@
       </div>
     </div>
 
-    <div *ngIf="submitSuccess" class="alert-success">✅ {{ editMode ? 'Imóvel atualizado com sucesso!' : 'Imóvel cadastrado com sucesso!' }} Redirecionando...</div>
+    <div *ngIf="submitSuccess" class="alert-success">✅ {{ editMode ? 'Imóvel atualizado com sucesso! Redirecionando...' : 'Imóvel cadastrado como rascunho! Redirecionando para Meus Imóveis para publicar...' }}</div>
     <div *ngIf="submitError" class="alert-error">❌ {{ submitError }}</div>
 
     <button [disabled]="propertyForm.invalid || isSubmitting" type="submit">

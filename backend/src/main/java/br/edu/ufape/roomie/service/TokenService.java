@@ -11,9 +11,12 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.logging.Logger;
 
 @Service
 public class TokenService {
+
+    private static final Logger logger = Logger.getLogger(TokenService.class.getName());
 
     @Value("${api.security.token.secret}")
     private String secret;
@@ -45,11 +48,12 @@ public class TokenService {
                     .verify(token)
                     .getSubject();
         } catch (JWTVerificationException exception) {
+            logger.warning("JWT validation failed: " + exception.getMessage());
             return "";
         }
     }
 
     private Instant genExpirationDate() {
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+        return LocalDateTime.now(ZoneOffset.UTC).plusHours(8).toInstant(ZoneOffset.UTC);
     }
 }
