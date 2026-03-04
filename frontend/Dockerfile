@@ -5,8 +5,7 @@ RUN npm ci
 
 COPY . .
 
-ARG BUILD_CONFIGURATION=production
-RUN npm run build -- --configuration $BUILD_CONFIGURATION
+xRUN npm run build
 
 
 FROM nginx:alpine
@@ -17,3 +16,5 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
+
+
