@@ -2,6 +2,7 @@ package br.edu.ufape.roomie.controller;
 
 import br.edu.ufape.roomie.model.Student;
 import br.edu.ufape.roomie.model.User;
+import br.edu.ufape.roomie.repository.StudentRepository;
 import br.edu.ufape.roomie.service.InterestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,25 +13,29 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/announcements")
 @RequiredArgsConstructor
 public class InterestController {
 
     private final InterestService interestService;
+    private final StudentRepository studentRepository;
 
     @PostMapping("/{id}/interest")
     public ResponseEntity<String> expressInterest(
             @PathVariable("id") Long propertyId,
             @AuthenticationPrincipal User loggedInUser) {
 
-        if (!(loggedInUser instanceof Student student)) {
+        Optional<Student> optStudent = studentRepository.findById(loggedInUser.getId());
+        if (optStudent.isEmpty()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("Acesso negado: Apenas estudantes podem demonstrar interesse em imóveis.");
         }
 
         try {
-            interestService.registerInterest(propertyId, student);
+            interestService.registerInterest(propertyId, optStudent.get());
             return ResponseEntity.ok("Interesse registrado com sucesso. O administrador foi notificado.");
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage()); // 409
