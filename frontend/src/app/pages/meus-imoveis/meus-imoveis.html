@@ -58,59 +58,142 @@
 
   <!-- Lista de imóveis -->
   <div class="properties-grid" *ngIf="properties.length > 0">
-    <div class="property-card" *ngFor="let property of properties">
+    <div class="property-card"
+         [class.card-expanded]="expandedInterestsPropertyId === property.idImovel"
+         *ngFor="let property of properties">
 
-      <div class="property-card-header">
-        <h3 class="property-title">{{ property.titulo }}</h3>
-        <span class="status-badge" [ngClass]="statusClass(property.status)">
-          {{ statusLabel(property.status) }}
-        </span>
-      </div>
+      <!-- Informações principais do imóvel -->
+      <div class="card-body">
 
-      <div class="property-info">
-        <div class="info-row">
-          <span class="material-icons info-icon">attach_money</span>
-          <span>R$ {{ property.preco | number:'1.0-0' }}<span class="info-sub">/mês</span></span>
+        <div class="property-card-header">
+          <h3 class="property-title">{{ property.titulo }}</h3>
+          <span class="status-badge" [ngClass]="statusClass(property.status)">
+            {{ statusLabel(property.status) }}
+          </span>
         </div>
-        <div class="info-row" *ngIf="property.vagasDisponiveis !== undefined">
-          <span class="material-icons info-icon">group</span>
-          <span>{{ property.vagasDisponiveis }} vaga{{ property.vagasDisponiveis !== 1 ? 's' : '' }}</span>
-        </div>
-        <div class="info-row" *ngIf="property.tipo">
-          <span class="material-icons info-icon">category</span>
-          <span>{{ typeLabel(property.tipo) }}</span>
-        </div>
-      </div>
 
-      <div class="property-card-actions">
-        <button
-          *ngIf="property.status === 'DRAFT'"
-          class="btn-publish"
-          (click)="publish(property.idImovel)">
-          <span class="material-icons">publish</span>
-          Publicar
-        </button>
-        <span class="published-badge" *ngIf="property.status === 'ACTIVE'">
-          <span class="material-icons">check_circle</span>
-          Publicado
-        </span>
-        <span class="rented-badge" *ngIf="property.status === 'RENTED'">
-          <span class="material-icons">lock</span>
-          Alugado
-        </span>
-        <button
-          *ngIf="property.status !== 'RENTED'"
-          class="btn-edit"
-          (click)="editProperty(property.idImovel)">
-          <span class="material-icons">edit</span>
-          Editar
-        </button>
-        <button
-          class="btn-delete"
-          (click)="askDelete(property.idImovel)">
-          <span class="material-icons">delete</span>
-          Excluir
-        </button>
+        <div class="property-info">
+          <div class="info-row">
+            <span class="material-icons info-icon">attach_money</span>
+            <span>R$ {{ property.preco | number:'1.0-0' }}<span class="info-sub">/mês</span></span>
+          </div>
+          <div class="info-row" *ngIf="property.vagasDisponiveis !== undefined">
+            <span class="material-icons info-icon">group</span>
+            <span>{{ property.vagasDisponiveis }} vaga{{ property.vagasDisponiveis !== 1 ? 's' : '' }}</span>
+          </div>
+          <div class="info-row" *ngIf="property.tipo">
+            <span class="material-icons info-icon">category</span>
+            <span>{{ typeLabel(property.tipo) }}</span>
+          </div>
+        </div>
+
+        <div class="property-card-actions">
+          <button
+            *ngIf="property.status === 'DRAFT'"
+            class="btn-publish"
+            (click)="publish(property.idImovel)">
+            <span class="material-icons">publish</span>
+            Publicar
+          </button>
+          <span class="published-badge" *ngIf="property.status === 'ACTIVE'">
+            <span class="material-icons">check_circle</span>
+            Publicado
+          </span>
+          <span class="rented-badge" *ngIf="property.status === 'RENTED'">
+            <span class="material-icons">lock</span>
+            Alugado
+          </span>
+          <button
+            *ngIf="property.status !== 'RENTED'"
+            class="btn-edit"
+            (click)="editProperty(property.idImovel)">
+            <span class="material-icons">edit</span>
+            Editar
+          </button>
+          <button
+            class="btn-delete"
+            (click)="askDelete(property.idImovel)">
+            <span class="material-icons">delete</span>
+            Excluir
+          </button>
+          <button
+            class="btn-candidates"
+            [class.active]="expandedInterestsPropertyId === property.idImovel"
+            (click)="toggleInterests(property.idImovel)">
+            <span class="material-icons">people</span>
+            Candidatos
+            <span class="material-icons chevron">
+              {{ expandedInterestsPropertyId === property.idImovel ? 'expand_less' : 'expand_more' }}
+            </span>
+          </button>
+        </div>
+
+      </div><!-- /card-body -->
+
+      <!-- Painel de candidatos -->
+      <div class="interests-panel" *ngIf="expandedInterestsPropertyId === property.idImovel">
+
+        <p class="interests-panel-title">
+          <span class="material-icons">group</span>
+          Candidatos interessados
+        </p>
+
+        <!-- Carregando -->
+        <div class="interests-loading" *ngIf="isLoadingInterests">
+          <span class="material-icons spinning">sync</span>
+          Carregando candidatos...
+        </div>
+
+        <!-- Lista vazia -->
+        <div class="interests-empty" *ngIf="!isLoadingInterests && getInterestsFor(property.idImovel).length === 0">
+          <span class="material-icons">inbox</span>
+          <p>Nenhum estudante demonstrou interesse ainda.</p>
+        </div>
+
+        <!-- Tabela de candidatos -->
+        <div class="interests-table-wrapper" *ngIf="!isLoadingInterests && getInterestsFor(property.idImovel).length > 0">
+          <table class="interests-table">
+            <thead>
+              <tr>
+                <th>Estudante</th>
+                <th>Curso</th>
+                <th>Instituição</th>
+                <th>Data</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let interest of getInterestsFor(property.idImovel)">
+                <td>{{ interest.studentName }}</td>
+                <td>{{ interest.major }}</td>
+                <td>{{ interest.institution }}</td>
+                <td>{{ interest.interestDate | date:'dd/MM/yyyy' }}</td>
+                <td>
+                  <span class="interest-badge" [ngClass]="interestStatusClass(interest.status)">
+                    {{ interestStatusLabel(interest.status) }}
+                  </span>
+                </td>
+                <td class="interests-actions">
+                  <button
+                    *ngIf="interest.status !== InterestStatus.ACCEPTED"
+                    class="btn-accept"
+                    title="Aceitar candidato"
+                    (click)="updateCandidateStatus(interest.interestId, InterestStatus.ACCEPTED, property.idImovel)">
+                    <span class="material-icons">check</span>
+                  </button>
+                  <button
+                    *ngIf="interest.status !== InterestStatus.REJECTED"
+                    class="btn-reject"
+                    title="Recusar candidato"
+                    (click)="updateCandidateStatus(interest.interestId, InterestStatus.REJECTED, property.idImovel)">
+                    <span class="material-icons">close</span>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
     </div>
