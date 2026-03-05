@@ -1,19 +1,19 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {RouterLink} from '@angular/router';
 import {Property} from '../../models/property';
 import {environment} from '../../../enviroments/enviroment';
 
 @Component({
   selector: 'app-property-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './property-card.html',
   styleUrl: './property-card.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyCard {
   @Input() property!: Property;
-  @Output() propertySelected = new EventEmitter<Property>();
 
   readonly apiBase = environment.apiUrl;
 

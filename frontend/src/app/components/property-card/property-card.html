@@ -1,4 +1,4 @@
-<button (click)="propertySelected.emit(property)" class="card" [attr.aria-label]="property.title">
+<a [routerLink]="['/details', property.id]" class="card" [attr.aria-label]="property.title">
   <div class="card-image-wrapper">
     <img
       *ngIf="firstPhotoUrl; else noPhoto"
@@ -27,7 +27,8 @@
       <span *ngIf="property.availableVacancies" class="tag">
         {{ property.availableVacancies }} vaga{{ property.availableVacancies > 1 ? 's' : '' }}
       </span>
-      <span *ngIf="property.acceptAnimals" class="tag"> Aceita animais </span>
+      <span *ngIf="property.acceptAnimals" class="tag">Aceita animais</span>
+      <span *ngIf="property.hasGarage" class="tag">Garagem</span>
     </div>
   </div>
-</button>
+</a>
