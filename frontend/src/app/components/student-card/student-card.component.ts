@@ -22,7 +22,16 @@ export class StudentCardComponent {
     const pct = this.recommendation.compatibilityPercentage;
     if (pct >= 75) return '#16a34a';
     if (pct >= 50) return '#d97706';
-    return '#6b7280';
+    if (pct >= 25) return '#ea580c';
+    return '#9ca3af';
+  }
+
+  get compatibilityGradient(): string {
+    const pct = this.recommendation.compatibilityPercentage;
+    if (pct >= 75) return 'linear-gradient(90deg, #16a34a, #22c55e)';
+    if (pct >= 50) return 'linear-gradient(90deg, #d97706, #fbbf24)';
+    if (pct >= 25) return 'linear-gradient(90deg, #ea580c, #fb923c)';
+    return 'linear-gradient(90deg, #9ca3af, #d1d5db)';
   }
 
   onIgnore(event: MouseEvent): void {

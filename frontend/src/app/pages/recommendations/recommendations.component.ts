@@ -1,8 +1,10 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Router} from '@angular/router';
 import {RecommendationService} from '../../services/recommendation.service';
+import {HabitService} from '../../services/habit.service';
 import {RoommateRecommendation} from '../../models/roommate-recommendation';
+import {HabitResponse} from '../../models/habit';
 import {HeaderComponent} from '../../components/shared/header/header.component';
 import {StudentCardComponent} from '../../components/student-card/student-card.component';
 import {FilterPanelComponent} from '../../components/filter-panel/filter-panel.component';
@@ -17,10 +19,23 @@ import {DEFAULT_FILTER_STATE, FilterState} from '../../models/filter-state';
 })
 export class RecommendationsComponent implements OnInit {
   private readonly recommendationService = inject(RecommendationService);
+  private readonly habitService = inject(HabitService);
   private readonly router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
+
+  /** Mapa enum name → label (espelha o backend StudySchedule) */
+  private readonly scheduleLabels: Record<string, string> = {
+    MORNING: 'manhã',
+    AFTERNOON: 'tarde',
+    EVENING: 'noite',
+    DAWN: 'madrugada',
+  };
 
   /** Lista completa vinda da API (sem os ignorados) */
   allRecommendations: RoommateRecommendation[] = [];
+
+  /** Hábitos do próprio usuário logado — usados como opções de filtro */
+  myHabits: HabitResponse | null = null;
 
   isLoading = true;
   errorMessage = '';
@@ -34,6 +49,10 @@ export class RecommendationsComponent implements OnInit {
   lastIgnored: RoommateRecommendation | null = null;
 
   ngOnInit(): void {
+    this.habitService.getMyHabits().subscribe({
+      next: h => { this.myHabits = h; this.cdr.markForCheck(); },
+      error: () => { /* sem hábitos — filtro ficará vazio */ }
+    });
     this.loadRecommendations();
   }
 
@@ -45,6 +64,7 @@ export class RecommendationsComponent implements OnInit {
       next: (data) => {
         this.allRecommendations = data;
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.isLoading = false;
@@ -66,13 +86,17 @@ export class RecommendationsComponent implements OnInit {
     const { majorSearch, minCompatibility, studySchedules, selectedHobbies, selectedLifeStyles, selectedCleaningPrefs } = this.filterState;
     const search = majorSearch.trim().toLowerCase();
 
+    const norm = (s: string) => s.toLowerCase().trim();
+    /** Converte enum name (MORNING) ou label (manhã) para label normalizado */
+    const normSchedule = (s: string) => this.scheduleLabels[s.toUpperCase().trim()] ?? norm(s);
+
     return this.allRecommendations.filter(rec => {
       if (search && !rec.major.toLowerCase().includes(search)) return false;
       if (rec.compatibilityPercentage < minCompatibility) return false;
-      if (studySchedules.length > 0 && !studySchedules.includes(rec.studySchedule ?? '')) return false;
-      if (selectedHobbies.length > 0 && !selectedHobbies.every(h => rec.hobbies.includes(h))) return false;
-      if (selectedLifeStyles.length > 0 && !selectedLifeStyles.every(l => rec.lifeStyles.includes(l))) return false;
-      if (selectedCleaningPrefs.length > 0 && !selectedCleaningPrefs.every(c => rec.cleaningPrefs.includes(c))) return false;
+      if (studySchedules.length > 0 && !studySchedules.some(s => normSchedule(s) === normSchedule(rec.studySchedule ?? ''))) return false;
+      if (selectedHobbies.length > 0 && !selectedHobbies.every(h => rec.hobbies.some(rh => norm(rh) === norm(h)))) return false;
+      if (selectedLifeStyles.length > 0 && !selectedLifeStyles.every(l => rec.lifeStyles.some(rl => norm(rl) === norm(l)))) return false;
+      if (selectedCleaningPrefs.length > 0 && !selectedCleaningPrefs.every(c => rec.cleaningPrefs.some(rc => norm(rc) === norm(c)))) return false;
       return true;
     });
   }
@@ -82,19 +106,21 @@ export class RecommendationsComponent implements OnInit {
   }
 
   get availableStudySchedules(): string[] {
-    return [...new Set(this.allRecommendations.filter(r => r.studySchedule).map(r => r.studySchedule!))].sort();
+    if (!this.myHabits?.studySchedule) return [];
+    const label = this.scheduleLabels[this.myHabits.studySchedule.toUpperCase()] ?? this.myHabits.studySchedule;
+    return [label];
   }
 
   get availableHobbies(): string[] {
-    return [...new Set(this.allRecommendations.flatMap(r => r.hobbies))].sort();
+    return [...(this.myHabits?.hobbies ?? [])].sort();
   }
 
   get availableLifeStyles(): string[] {
-    return [...new Set(this.allRecommendations.flatMap(r => r.lifeStyles))].sort();
+    return [...(this.myHabits?.lifeStyles ?? [])].sort();
   }
 
   get availableCleaningPrefs(): string[] {
-    return [...new Set(this.allRecommendations.flatMap(r => r.cleaningPrefs))].sort();
+    return [...(this.myHabits?.cleaningPrefs ?? [])].sort();
   }
 
   get hasActiveFilters(): boolean {

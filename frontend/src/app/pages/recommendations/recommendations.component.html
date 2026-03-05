@@ -64,6 +64,9 @@
     class="content-layout"
     [class.content-layout--with-panel]="filterPanelOpen">
 
+    <!-- Backdrop (mobile bottom sheet) -->
+    <div *ngIf="filterPanelOpen" class="filter-backdrop" (click)="filterPanelOpen = false" aria-hidden="true"></div>
+
     <!-- Painel de Filtros -->
     <aside *ngIf="filterPanelOpen" class="filter-sidebar" aria-label="Painel de filtros">
       <app-filter-panel

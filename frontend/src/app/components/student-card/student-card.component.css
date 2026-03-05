@@ -12,11 +12,89 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* === Top row: avatar + info + badge === */
+/* === Top row: avatar + info === */
 .card-top {
   display: flex;
   align-items: center;
   gap: 14px;
+  margin-bottom: 14px;
+}
+
+/* === Liquid compatibility bar === */
+.compat-bar-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.compat-bar-track {
+  width: 100%;
+  height: 18px;
+  background: #f3f4f6;
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.compat-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  position: relative;
+  overflow: hidden;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fillIn 0.9s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes fillIn {
+  from { width: 0 !important; }
+}
+
+/* wave overlay */
+.wave {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255,255,255,0.12) 0px,
+    rgba(255,255,255,0.12) 4px,
+    transparent 4px,
+    transparent 12px
+  );
+  animation: waveShift 2s linear infinite;
+}
+
+@keyframes waveShift {
+  from { background-position: 0 0; }
+  to   { background-position: 40px 0; }
+}
+
+/* bubbles */
+.bubble {
+  position: absolute;
+  bottom: -4px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  animation: rise 2.2s ease-in infinite;
+}
+
+.b1 { left: 15%; animation-delay: 0s;    animation-duration: 2.0s; }
+.b2 { left: 35%; animation-delay: 0.5s;  animation-duration: 2.5s; width: 4px; height: 4px; }
+.b3 { left: 60%; animation-delay: 1.1s;  animation-duration: 1.8s; width: 6px; height: 6px; }
+.b4 { left: 80%; animation-delay: 1.7s;  animation-duration: 2.3s; }
+
+@keyframes rise {
+  0%   { transform: translateY(0) scale(1);   opacity: 0.7; }
+  60%  { opacity: 0.5; }
+  100% { transform: translateY(-18px) scale(0.5); opacity: 0; }
+}
+
+.compat-label {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
 }
 
 .avatar {
@@ -32,6 +110,8 @@
   font-weight: 800;
   flex-shrink: 0;
 }
+
+/* remove old badge */
 
 .card-info {
   flex: 1;
@@ -51,15 +131,6 @@
 .card-major {
   font-size: 0.85rem;
   color: #6b7280;
-}
-
-.compatibility-badge {
-  padding: 6px 14px;
-  border-radius: 999px;
-  color: #fff;
-  font-size: 0.9rem;
-  font-weight: 800;
-  flex-shrink: 0;
 }
 
 /* === Tags === */

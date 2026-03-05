@@ -92,14 +92,18 @@
 
 .content-layout--with-panel {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 360px 1fr;
   gap: 24px;
   align-items: start;
 }
 
-.filter-sidebar {
-  position: sticky;
-  top: 24px;
+@keyframes slidePanelIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.filter-backdrop {
+  display: none;
 }
 
 /* === Results Count === */
@@ -350,9 +354,49 @@
   .content-layout--with-panel {
     grid-template-columns: 1fr;
   }
+}
+
+@keyframes slideSheetUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+  .filter-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 200;
+  }
 
   .filter-sidebar {
-    position: static;
+    position: fixed !important;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    max-height: 82vh;
+    border-radius: 20px 20px 0 0;
+    background: #fff;
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.18);
+    z-index: 201;
+    overflow-y: auto;
+    animation: slideSheetUp 0.25s ease;
+  }
+
+  .content-layout--with-panel {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 641px) {
+  .filter-backdrop { display: none; }
+
+  .filter-sidebar {
+    position: sticky;
+    top: 24px;
+    animation: slidePanelIn 0.22s ease;
   }
 }
 
