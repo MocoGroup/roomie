@@ -7,6 +7,9 @@ import { PropertyDetailView } from '../../models/property-detail-view';
 import { PropertyPhoto } from '../../models/property';
 import { HeaderComponent } from '../../components/shared/header/header.component';
 import { environment } from '../../../enviroments/enviroment';
+import { Auth } from '../../auth/auth';
+import { StudentService } from '../../services/student.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-property-detail-page',
@@ -21,6 +24,8 @@ export class PropertyDetailPageComponent implements OnInit {
   private readonly propertyService = inject(PropertyService);
   private readonly favoritesService = inject(FavoritesService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly auth = inject(Auth);
+  private readonly studentService = inject(StudentService);
 
   readonly apiBase = environment.apiUrl;
 
@@ -30,6 +35,7 @@ export class PropertyDetailPageComponent implements OnInit {
   isLoading = true;
   errorMessage: string | null = null;
   interesseEnviado = false;
+  isStudent = false;
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -41,6 +47,18 @@ export class PropertyDetailPageComponent implements OnInit {
       this.cdr.detectChanges();
       return;
     }
+
+    // Verifica se o usuário logado é estudante
+    this.auth.currentUser$.pipe(take(1)).subscribe(user => {
+      if (!user) return;
+      this.studentService.getById(user.id).subscribe({
+        next: () => {
+          this.isStudent = true;
+          this.cdr.detectChanges();
+        },
+        error: () => { /* não é estudante */ }
+      });
+    });
 
     this.propertyService.getDetailById(id).subscribe({
       next: (data) => {
