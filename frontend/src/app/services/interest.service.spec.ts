@@ -58,7 +58,7 @@ describe('InterestService', () => {
     expect(service).toBeTruthy();
   });
 
-  // ── getInterests ──────────────────────────────────────────────────────────
+  // ── getInterests ────
 
   describe('getInterests()', () => {
     it('deve fazer GET em /announcements/{id}/interests e retornar lista de interessados', () => {
@@ -94,7 +94,7 @@ describe('InterestService', () => {
       expect(navigateSpy).toHaveBeenCalledWith(['/unauthorized']);
     });
 
-    it('deve propagar o erro com mensagem amigável ao receber 500', () => {
+    it('deve propagar o erro com mensagem amigável (fallback) quando o body está vazio', () => {
       let receivedError: Error | undefined;
 
       service.getInterests(1).subscribe({
@@ -103,7 +103,7 @@ describe('InterestService', () => {
       });
 
       const req = httpMock.expectOne(`${BASE}/1/interests`);
-      req.flush('Internal Server Error', { status: 500, statusText: 'Server Error' });
+      req.flush('', { status: 500, statusText: 'Server Error' });
 
       expect(receivedError).toBeDefined();
       expect(receivedError!.message).toContain('500');
@@ -125,7 +125,7 @@ describe('InterestService', () => {
     });
   });
 
-  // ── updateInterestStatus ──────────────────────────────────────────────────
+  // ── updateInterestStatus ────
 
   describe('updateInterestStatus()', () => {
     it('deve fazer PATCH em /announcements/interests/{id}/status com query param', () => {
@@ -175,7 +175,7 @@ describe('InterestService', () => {
     });
   });
 
-  // ── expressInterest ───────────────────────────────────────────────────────
+  // ── expressInterest ───
 
   describe('expressInterest()', () => {
     it('deve fazer POST em /announcements/{id}/interest', () => {

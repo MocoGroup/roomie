@@ -11,7 +11,7 @@ import { InterestStatus } from '../models/interest-status.enum';
   providedIn: 'root'
 })
 export class InterestService {
-  private readonly apiUrl = `${environment.apiUrl}/api/announcements`;
+  private readonly apiUrl = `${environment.apiUrl}/announcements`;
 
   constructor(
     private readonly http: HttpClient,
@@ -80,4 +80,5 @@ export class InterestService {
     return throwError(() => new Error(message));
   }
 }
+
 
