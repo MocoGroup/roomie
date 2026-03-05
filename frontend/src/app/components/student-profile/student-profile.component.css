@@ -282,3 +282,48 @@
   display: flex;
   justify-content: flex-end;
 }
+
+/* === MOBILE RESPONSIVE === */
+@media (max-width: 576px) {
+  .page-wrapper {
+    padding: 24px 12px;
+  }
+
+  .container {
+    padding: 24px 16px;
+    border-radius: 12px;
+  }
+
+  .page-header {
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .page-icon {
+    font-size: 32px;
+  }
+
+  .page-header h2 {
+    font-size: 18px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-back,
+  .btn-save {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .add-phone-row {
+    flex-direction: column;
+  }
+
+  .btn-add-phone {
+    width: 100%;
+    justify-content: center;
+  }
+}

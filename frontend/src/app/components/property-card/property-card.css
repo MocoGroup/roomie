@@ -75,3 +75,20 @@
   border-radius: 4px;
   padding: 2px 8px;
 }
+
+/* === MOBILE RESPONSIVE === */
+@media (max-width: 576px) {
+  .card-image-wrapper,
+  .card-image,
+  .card-no-photo {
+    height: 160px;
+  }
+
+  .card-body {
+    padding: 12px;
+  }
+
+  .card-body h3 {
+    font-size: 15px;
+  }
+}

@@ -145,3 +145,27 @@ hr {
     transform: rotate(360deg);
   }
 }
+
+/* === MOBILE RESPONSIVE === */
+@media (max-width: 576px) {
+  .container {
+    margin: 16px auto;
+    padding: 24px 16px;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  .btn-save {
+    font-size: 14px;
+    padding: 13px;
+  }
+}

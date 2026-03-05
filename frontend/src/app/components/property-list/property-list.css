@@ -16,3 +16,12 @@
   margin-top: 40px;
   opacity: 0.7;
 }
+
+/* === MOBILE RESPONSIVE === */
+@media (max-width: 576px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+}

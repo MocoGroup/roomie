@@ -36,8 +36,19 @@
     </div>
 
     <div class="main-content">
-      <aside class="sidebar">
-        <h3>Filtros</h3>
+      <button class="btn-toggle-filters" (click)="showMobileFilters = !showMobileFilters">
+        <span class="material-icons">tune</span>
+        {{ showMobileFilters ? 'Ocultar Filtros' : 'Filtros' }}
+      </button>
+
+      <aside class="sidebar" [class.sidebar-open]="showMobileFilters">
+        <div class="sidebar-header-mobile">
+          <h3>Filtros</h3>
+          <button class="btn-close-filters" (click)="showMobileFilters = false">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <h3 class="sidebar-title-desktop">Filtros</h3>
         <form (ngSubmit)="onFilter()" [formGroup]="filterForm">
           <div class="filter-group">
             <label for="filter-district">Bairro</label>

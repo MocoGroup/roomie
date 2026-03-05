@@ -201,3 +201,47 @@
   color: #888;
   margin-top: 4px !important;
 }
+
+/* === MOBILE RESPONSIVE === */
+@media (max-width: 576px) {
+  .modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .modal-panel {
+    border-radius: 16px 16px 0 0;
+    max-height: 95vh;
+  }
+
+  .main-photo {
+    height: 220px;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .detail-body {
+    padding: 16px;
+  }
+
+  .detail-header {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .detail-header h2 {
+    font-size: 18px;
+  }
+
+  .price {
+    font-size: 20px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .no-photo-banner {
+    border-radius: 16px 16px 0 0;
+  }
+}
