@@ -342,3 +342,165 @@ input::-ms-clear {
   transform: translateY(-2px);
   color: #fff;
 }
+
+/* === MOBILE RESPONSIVE === */
+@media (max-width: 768px) {
+  .container {
+    width: 100%;
+    min-height: auto;
+    border-radius: 0;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-container {
+    position: relative;
+    width: 100% !important;
+    height: auto;
+    transform: none !important;
+  }
+
+  .sign-in-container {
+    width: 100%;
+    z-index: 2;
+  }
+
+  .container.right-panel-active .sign-in-container {
+    transform: none;
+    display: none;
+  }
+
+  .sign-up-container {
+    width: 100%;
+    opacity: 0;
+    display: none;
+    position: relative;
+  }
+
+  .container.right-panel-active .sign-up-container {
+    transform: none;
+    opacity: 1;
+    display: block;
+    z-index: 5;
+    animation: none;
+  }
+
+  .overlay-container {
+    position: relative;
+    left: 0;
+    width: 100%;
+    height: auto;
+    transform: none !important;
+    order: 1;
+  }
+
+  .overlay {
+    left: 0;
+    width: 100%;
+    transform: none !important;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .overlay-panel {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding: 40px 30px;
+    transform: none !important;
+  }
+
+  .overlay-left,
+  .overlay-right {
+    transform: none !important;
+  }
+
+  /* No estado padrão (login), esconde overlay-left ("Entrar") */
+  .overlay-left {
+    display: none;
+  }
+
+  /* Mostra só "Cadastrar" no estado padrão */
+  .overlay-right {
+    display: flex;
+  }
+
+  .container.right-panel-active .overlay-left {
+    transform: none;
+    display: flex;
+  }
+
+  .container.right-panel-active .overlay-right {
+    display: none;
+  }
+
+  .container.right-panel-active .overlay-container {
+    transform: none;
+  }
+
+  .container.right-panel-active .overlay {
+    transform: none;
+  }
+
+  .sign-in-container {
+    order: 0;
+  }
+
+  .sign-up-container {
+    order: 0;
+  }
+
+  form {
+    padding: 30px 20px;
+    min-height: auto;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  button {
+    padding: 12px 30px;
+    font-size: 13px;
+    width: 100%;
+  }
+
+  .eye-btn {
+    width: auto;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .gender-options {
+    flex-wrap: wrap;
+  }
+
+  .gender-btn {
+    padding: 8px 6px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  form {
+    padding: 24px 16px;
+  }
+
+  .input-group {
+    margin-bottom: 20px;
+  }
+
+  input {
+    padding: 10px 12px;
+    padding-right: 36px;
+    font-size: 14px;
+  }
+}

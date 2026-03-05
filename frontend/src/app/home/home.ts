@@ -18,6 +18,7 @@ export class Home implements OnInit {
   appliedLocation: string = '';
   properties: any[] = [];
   isLoading: boolean = false;
+  showMobileFilters: boolean = false;
   initialSearch = new FormControl('');
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -84,6 +85,7 @@ export class Home implements OnInit {
     this.initialSearch.reset();
     this.filterForm.reset();
     this.properties = [];
+    this.showMobileFilters = false;
 
     this.router.navigate([], {
       relativeTo: this.route,

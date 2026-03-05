@@ -227,3 +227,147 @@
   color: #666;
   margin-bottom: 30px;
 }
+
+/* === MOBILE FILTER TOGGLE === */
+.btn-toggle-filters {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  background: #005fa3;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 12px 16px 0;
+  font-family: 'Raleway', sans-serif;
+}
+
+.btn-toggle-filters .material-icons {
+  font-size: 18px;
+}
+
+.sidebar-header-mobile {
+  display: none;
+}
+
+.sidebar-title-desktop {
+  margin-top: 0;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.btn-close-filters {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+
+/* === MOBILE RESPONSIVE === */
+@media (max-width: 768px) {
+  /* Hero */
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+    margin-bottom: 24px;
+  }
+
+  .big-search-box {
+    flex-direction: column;
+    border-radius: 16px;
+    padding: 8px;
+  }
+
+  .big-search-box input {
+    padding: 14px 16px;
+    font-size: 16px;
+    border-radius: 12px;
+  }
+
+  .big-search-box .btn-big-search {
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 15px;
+    width: 100%;
+  }
+
+  /* Dashboard */
+  .search-section {
+    padding: 14px 16px;
+  }
+
+  .main-content {
+    flex-direction: column;
+    overflow: visible;
+  }
+
+  .btn-toggle-filters {
+    display: inline-flex;
+  }
+
+  .sidebar {
+    display: none;
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #eee;
+    padding: 16px;
+  }
+
+  .sidebar.sidebar-open {
+    display: block;
+  }
+
+  .sidebar-title-desktop {
+    display: none;
+  }
+
+  .sidebar-header-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .sidebar-header-mobile h3 {
+    margin: 0;
+    color: #333;
+  }
+
+  .results-area {
+    padding: 20px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 1.6rem;
+  }
+
+  .hero-content p {
+    font-size: 0.9rem;
+  }
+
+  .search-bar {
+    flex-direction: column;
+    border-radius: 12px;
+  }
+
+  .search-bar input {
+    border-radius: 12px 12px 0 0;
+    border-right: 1px solid #ddd;
+  }
+
+  .search-bar .btn-search {
+    border-radius: 0 0 12px 12px;
+    padding: 12px;
+  }
+}
