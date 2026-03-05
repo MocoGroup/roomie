@@ -128,6 +128,11 @@ export class HeaderComponent {
     this.router.navigate(['/meus-imoveis']);
   }
 
+  goToFavorites(): void {
+    this.isMenuOpen = false;
+    this.router.navigate(['/favoritos']);
+  }
+
   goToStudentProfile(): void {
     this.isMenuOpen = false;
     this.router.navigate(['/student-profile']);

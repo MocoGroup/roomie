@@ -7,6 +7,7 @@ import {PropertyFormComponent} from './property-form/property-form';
 import {ProfileEditComponent} from './components/profile/profile-edit.component';
 import {StudentProfileComponent} from './components/student-profile/student-profile.component';
 import {MeusImoveis} from './pages/meus-imoveis/meus-imoveis';
+import {FavoritosComponent} from './pages/favoritos/favoritos.component';
 import {PropertyDetailPageComponent} from './pages/property-detail/property-detail-page.component';
 
 export const routes: Routes = [
@@ -65,6 +66,12 @@ export const routes: Routes = [
     component: MeusImoveis,
     canActivate: [authGuard],
     title: 'Meus Imóveis - Roomie'
+  },
+  {
+    path: 'favoritos',
+    component: FavoritosComponent,
+    canActivate: [authGuard],
+    title: 'Favoritos - Roomie'
   },
   {
     path: 'details/:id',

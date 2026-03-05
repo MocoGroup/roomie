@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PropertyService } from '../../services/propertyService';
+import { FavoritesService } from '../../services/favorites.service';
 import { PropertyDetailView } from '../../models/property-detail-view';
 import { PropertyPhoto } from '../../models/property';
 import { HeaderComponent } from '../../components/shared/header/header.component';
@@ -18,6 +19,7 @@ export class PropertyDetailPageComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly propertyService = inject(PropertyService);
+  private readonly favoritesService = inject(FavoritesService);
   private readonly cdr = inject(ChangeDetectorRef);
 
   readonly apiBase = environment.apiUrl;
@@ -27,6 +29,7 @@ export class PropertyDetailPageComponent implements OnInit {
   selectedPhotoIndex = 0;
   isLoading = true;
   errorMessage: string | null = null;
+  interesseEnviado = false;
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -42,6 +45,7 @@ export class PropertyDetailPageComponent implements OnInit {
     this.propertyService.getDetailById(id).subscribe({
       next: (data) => {
         this.detail = data;
+        this.interesseEnviado = this.favoritesService.isFavorite(data.idImovel);
         this.isLoading = false;
         this.cdr.detectChanges();
       },
@@ -98,6 +102,27 @@ export class PropertyDetailPageComponent implements OnInit {
       MALE: 'Masculino', FEMALE: 'Feminino', MIXED: 'Misto', OTHER: 'Outro',
     };
     return gender ? (map[gender] ?? gender) : '—';
+  }
+
+  getMapsUrl(): string {
+    if (!this.detail) return '#';
+    const address = `${this.detail.rua}, ${this.detail.numEndereco} - ${this.detail.bairro}, ${this.detail.cidade} - ${this.detail.estado}, ${this.detail.cep}`;
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+  }
+
+  demonstrarInteresse(): void {
+    if (!this.detail) return;
+    this.favoritesService.addFavorite({
+      id: this.detail.idImovel,
+      titulo: this.detail.titulo,
+      preco: this.detail.preco,
+      tipo: this.detail.tipo,
+      bairro: this.detail.bairro,
+      cidade: this.detail.cidade,
+      estado: this.detail.estado,
+      addedAt: new Date().toISOString(),
+    });
+    this.interesseEnviado = true;
   }
 }
 

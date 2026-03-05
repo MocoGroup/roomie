@@ -313,7 +313,146 @@
 .content-card > .card-header,
 .content-card > .description,
 .content-card > .info-grid,
-.content-card > .section {
+.content-card > .section,
+.content-card > .interest-section {
   margin-top: 24px;
+}
+
+/* ── Info-item color variants ── */
+.info-item.allowed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.info-item.allowed .label {
+  color: #047857;
+}
+
+.info-item.allowed .value {
+  color: #065f46;
+}
+
+.info-item.denied {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.info-item.denied .label {
+  color: #b91c1c;
+}
+
+.info-item.denied .value {
+  color: #991b1b;
+}
+
+.inline-icon {
+  vertical-align: -2px;
+  margin-right: 4px;
+}
+
+/* ── Mapa / Localização ── */
+.map-section h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.map-container {
+  margin-top: 16px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  background: #f0f4f8;
+}
+
+.map-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 24px 24px;
+  background: linear-gradient(135deg, #e8f0fe 0%, #f0f4f8 100%);
+}
+
+.map-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  font-family: 'Raleway', sans-serif;
+}
+
+.btn-maps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 20px;
+  background: #005fa3;
+  color: #ffffff;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.btn-maps:hover {
+  background: #004a80;
+}
+
+/* ── Demonstrar Interesse ── */
+.interest-section {
+  padding: 0 32px 32px;
+}
+
+.btn-interest {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #005fa3 0%, #0078cc 100%);
+  color: #ffffff;
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 95, 163, 0.3);
+  transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+  letter-spacing: 0.02em;
+}
+
+.btn-interest:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0, 95, 163, 0.4);
+  background: linear-gradient(135deg, #004a80 0%, #006bb3 100%);
+}
+
+.btn-interest:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-interest:disabled {
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  box-shadow: 0 4px 16px rgba(5, 150, 105, 0.3);
+  cursor: default;
+}
+
+/* ── Responsivo ── */
+@media (max-width: 576px) {
+  .interest-section {
+    padding: 0 16px 24px;
+  }
+
+  .map-placeholder {
+    padding: 28px 16px 16px;
+  }
 }
 
