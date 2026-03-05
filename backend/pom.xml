@@ -141,7 +141,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <argLine>-XX:+EnableDynamicAgentLoading -Xshare:off</argLine>
+                    <argLine>@{argLine} -XX:+EnableDynamicAgentLoading -Xshare:off</argLine>
                 </configuration>
             </plugin>
             <plugin>
@@ -197,12 +197,10 @@
                                 <exclude>br/edu/ufape/roomie/repository/**</exclude>
                                 <!-- sem cobertura de testes nesta sprint -->
                                 <exclude>br/edu/ufape/roomie/controller/AuthController.class</exclude>
-                                <exclude>br/edu/ufape/roomie/controller/InterestController.class</exclude>
                                 <exclude>br/edu/ufape/roomie/controller/PropertyController.class</exclude>
                                 <exclude>br/edu/ufape/roomie/controller/RecommendationController.class</exclude>
                                 <exclude>br/edu/ufape/roomie/controller/HealthController.class</exclude>
                                 <exclude>br/edu/ufape/roomie/service/AuthService.class</exclude>
-                                <exclude>br/edu/ufape/roomie/service/InterestService.class</exclude>
                                 <exclude>br/edu/ufape/roomie/service/PropertyService.class</exclude>
                                 <exclude>br/edu/ufape/roomie/service/StudentService.class</exclude>
                                 <exclude>br/edu/ufape/roomie/service/TokenService.class</exclude>

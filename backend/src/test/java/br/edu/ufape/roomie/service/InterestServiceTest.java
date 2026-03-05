@@ -192,4 +192,74 @@ class InterestServiceTest {
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("Interesse não encontrado.");
     }
+
+    @Test
+    @DisplayName("Deve retornar true quando o estudante já demonstrou interesse no imóvel")
+    void testaHasInterestRetornaTrue() {
+        when(propertyRepository.findById(100L)).thenReturn(Optional.of(property));
+        when(interestRepository.existsByStudentAndProperty(student, property)).thenReturn(true);
+
+        boolean result = interestService.hasInterest(100L, student);
+
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    @DisplayName("Deve retornar false quando o estudante não demonstrou interesse no imóvel")
+    void testaHasInterestRetornaFalse() {
+        when(propertyRepository.findById(100L)).thenReturn(Optional.of(property));
+        when(interestRepository.existsByStudentAndProperty(student, property)).thenReturn(false);
+
+        boolean result = interestService.hasInterest(100L, student);
+
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao verificar interesse em imóvel inexistente")
+    void testaHasInterestImovelNaoEncontrado() {
+        when(propertyRepository.findById(999L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> interestService.hasInterest(999L, student))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("Imóvel não encontrado.");
+    }
+
+    // ── updateInterestStatus – branches adicionais ──────────────────────────
+
+    @Test
+    @DisplayName("Deve permitir definir o mesmo status quando a proposta já foi processada")
+    void testaAtualizarStatusMesmoStatusJaProcessado() {
+        interest.setStatus(InterestStatus.ACCEPTED);
+        when(interestRepository.findById(10L)).thenReturn(Optional.of(interest));
+
+        interestService.updateInterestStatus(10L, InterestStatus.ACCEPTED, owner);
+
+        assertThat(interest.getStatus()).isEqualTo(InterestStatus.ACCEPTED);
+        verify(interestRepository, times(1)).save(interest);
+    }
+
+    @Test
+    @DisplayName("Deve rejeitar a proposta com sucesso quando pendente")
+    void testaRejeitarPropostaPendente() {
+        when(interestRepository.findById(10L)).thenReturn(Optional.of(interest));
+
+        interestService.updateInterestStatus(10L, InterestStatus.REJECTED, owner);
+
+        assertThat(interest.getStatus()).isEqualTo(InterestStatus.REJECTED);
+        verify(interestRepository, times(1)).save(interest);
+    }
+
+    // ── listInterestsForProperty – branches adicionais ──────────────────────
+
+    @Test
+    @DisplayName("Deve retornar lista vazia quando não houver interessados")
+    void testaListarInteressadosListaVazia() {
+        when(propertyRepository.findById(100L)).thenReturn(Optional.of(property));
+        when(interestRepository.findByPropertyId(100L)).thenReturn(List.of());
+
+        List<InterestSummaryDTO> result = interestService.listInterestsForProperty(100L, owner);
+
+        assertThat(result).isEmpty();
+    }
 }

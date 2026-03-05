@@ -262,4 +262,88 @@ class InterestControllerTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
         assertThat(response.getContentAsString()).isEqualTo("Interesse não encontrado.");
     }
+
+    @Test
+    @DisplayName("Deveria devolver hasInterest=true quando o estudante já demonstrou interesse")
+    void testaCheckInterestEstudanteComInteresse() throws Exception {
+        Student mockStudent = new Student();
+        mockStudent.setId(1L);
+        mockStudent.setEmail("estudante@ufape.edu.br");
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(mockStudent, null, mockStudent.getAuthorities())
+        );
+
+        when(interestService.hasInterest(eq(1L), any(Student.class))).thenReturn(true);
+
+        var response = mvc.perform(get("/announcements/1/interest/check"))
+                .andReturn().getResponse();
+
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString()).contains("\"hasInterest\":true");
+    }
+
+    @Test
+    @DisplayName("Deveria devolver hasInterest=false quando o estudante não demonstrou interesse")
+    void testaCheckInterestEstudanteSemInteresse() throws Exception {
+        Student mockStudent = new Student();
+        mockStudent.setId(1L);
+        mockStudent.setEmail("estudante@ufape.edu.br");
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(mockStudent, null, mockStudent.getAuthorities())
+        );
+
+        when(interestService.hasInterest(eq(1L), any(Student.class))).thenReturn(false);
+
+        var response = mvc.perform(get("/announcements/1/interest/check"))
+                .andReturn().getResponse();
+
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString()).contains("\"hasInterest\":false");
+    }
+
+    @Test
+    @DisplayName("Deveria devolver hasInterest=false quando o usuário não for estudante")
+    void testaCheckInterestUsuarioNaoEstudante() throws Exception {
+        User mockUser = new User();
+        mockUser.setId(2L);
+        mockUser.setEmail("dono@ufape.edu.br");
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(mockUser, null, mockUser.getAuthorities())
+        );
+
+        var response = mvc.perform(get("/announcements/1/interest/check"))
+                .andReturn().getResponse();
+
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString()).contains("\"hasInterest\":false");
+    }
+
+    // ── getInterests – branch adicional ──────────────────────────────────
+
+    @Test
+    @DisplayName("Deveria devolver HTTP 404 ao listar interessados de um imóvel inexistente")
+    void testaListarInteressadosImovelNaoEncontrado() throws Exception {
+        User mockOwner = new User();
+        mockOwner.setId(10L);
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(mockOwner, null, mockOwner.getAuthorities())
+        );
+
+        when(interestService.listInterestsForProperty(eq(999L), any(User.class)))
+                .thenThrow(new RuntimeException("Imóvel não encontrado."));
+
+        var response = mvc.perform(get("/announcements/999/interests"))
+                .andReturn().getResponse();
+
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        assertThat(response.getContentAsString()).isEqualTo("Imóvel não encontrado.");
+    }
 }
