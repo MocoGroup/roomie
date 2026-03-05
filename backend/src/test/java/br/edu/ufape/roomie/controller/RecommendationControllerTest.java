@@ -18,11 +18,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import br.edu.ufape.roomie.repository.StudentRepository;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -49,6 +51,9 @@ class RecommendationControllerTest {
     @MockitoBean
     private UserDetailsService userDetailsService;
 
+    @MockitoBean
+    private StudentRepository studentRepository;
+
     @AfterEach
     void tearDown() {
         SecurityContextHolder.clearContext();
@@ -64,6 +69,8 @@ class RecommendationControllerTest {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(mockStudent, null, mockStudent.getAuthorities())
         );
+
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(mockStudent));
 
         RoommateRecommendationDTO recomendacao = new RoommateRecommendationDTO(
                 2L, "Maria", "BCC", 85, List.of("Estuda de MORNING", "fitness"),
@@ -93,6 +100,8 @@ class RecommendationControllerTest {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(mockStudent, null, mockStudent.getAuthorities())
         );
+
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(mockStudent));
 
         when(recommendationService.getRecommendations(any(Student.class)))
                 .thenThrow(new IllegalStateException("Você precisa cadastrar seus hábitos antes de receber recomendações."));

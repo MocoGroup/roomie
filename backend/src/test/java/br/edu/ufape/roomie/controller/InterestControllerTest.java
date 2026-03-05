@@ -19,12 +19,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import br.edu.ufape.roomie.repository.StudentRepository;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -53,6 +56,9 @@ class InterestControllerTest {
     @MockitoBean
     private UserDetailsService userDetailsService;
 
+    @MockitoBean
+    private StudentRepository studentRepository;
+
     @AfterEach
     void tearDown() {
         SecurityContextHolder.clearContext();
@@ -68,6 +74,8 @@ class InterestControllerTest {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(mockStudent, null, mockStudent.getAuthorities())
         );
+
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(mockStudent));
 
         var response = mvc.perform(post("/announcements/1/interest"))
                 .andReturn().getResponse();
@@ -87,6 +95,8 @@ class InterestControllerTest {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(mockStudent, null, mockStudent.getAuthorities())
         );
+
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(mockStudent));
 
         doThrow(new IllegalStateException("Você já demonstrou interesse neste imóvel."))
                 .when(interestService).registerInterest(eq(1L), any());
@@ -109,6 +119,8 @@ class InterestControllerTest {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(mockStudent, null, mockStudent.getAuthorities())
         );
+
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(mockStudent));
 
         doThrow(new RuntimeException("Imóvel não encontrado."))
                 .when(interestService).registerInterest(eq(999L), any());
