@@ -11,7 +11,6 @@ public class NotificationService {
         System.out.println("Notificação enviada para: " + owner.getEmail());
         System.out.println("Assunto: Novo interesse no seu imóvel " + property.getTitle());
         System.out.println("Mensagem: O estudante " + student.getName() + " demonstrou interesse.");
-        // TO - DO
     }
 
 }

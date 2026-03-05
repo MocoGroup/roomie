@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Novo Interesse no seu Imóvel – Roomie</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f6f8;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #333333;
+    }
+    .wrapper {
+      width: 100%;
+      padding: 40px 0;
+      background-color: #f4f6f8;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    .header {
+      background-color: #4f46e5;
+      padding: 32px 40px;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 0;
+      color: #ffffff;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    .header p {
+      margin: 6px 0 0;
+      color: #c7d2fe;
+      font-size: 14px;
+    }
+    .body {
+      padding: 36px 40px;
+    }
+    .greeting {
+      font-size: 17px;
+      margin-bottom: 16px;
+    }
+    .highlight-box {
+      background-color: #eef2ff;
+      border-left: 4px solid #4f46e5;
+      border-radius: 6px;
+      padding: 18px 20px;
+      margin: 24px 0;
+    }
+    .highlight-box p {
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: #555;
+    }
+    .highlight-box p:last-child {
+      margin: 0;
+    }
+    .highlight-box strong {
+      color: #1e1b4b;
+    }
+    .cta-wrapper {
+      text-align: center;
+      margin: 32px 0;
+    }
+    .cta-button {
+      display: inline-block;
+      background-color: #4f46e5;
+      color: #ffffff !important;
+      text-decoration: none;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid #e5e7eb;
+      margin: 28px 0;
+    }
+    .footer {
+      background-color: #f9fafb;
+      padding: 24px 40px;
+      text-align: center;
+      font-size: 12px;
+      color: #9ca3af;
+      border-top: 1px solid #e5e7eb;
+    }
+    .footer a {
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="container">
+
+      <div class="header">
+        <h1>🏠 Roomie</h1>
+        <p>Plataforma de moradia para estudantes</p>
+      </div>
+
+      <div class="body">
+        <p class="greeting">Olá, <strong>{{ownerName}}</strong>!</p>
+
+        <p>
+          Temos uma boa notícia: um estudante demonstrou interesse no seu anúncio.
+          Aqui estão os detalhes:
+        </p>
+
+        <div class="highlight-box">
+          <p>🏡 <strong>Imóvel:</strong> {{propertyTitle}}</p>
+          <p>👤 <strong>Estudante:</strong> {{studentName}}</p>
+          <p>📧 <strong>E-mail do estudante:</strong> {{studentEmail}}</p>
+        </div>
+
+        <p>
+          Entre em contato com o estudante pelo e-mail acima ou acesse a plataforma
+          para visualizar mais detalhes sobre o perfil dele.
+        </p>
+
+        <div class="cta-wrapper">
+          <a href="{{appUrl}}" class="cta-button">Acessar o Roomie</a>
+        </div>
+
+        <hr class="divider" />
+
+        <p style="font-size: 13px; color: #6b7280;">
+          Se você tiver dúvidas ou não reconhecer esta notificação,
+          entre em contato conosco pelo e-mail
+          <a href="mailto:suporte@roomie.com.br">suporte@roomie.com.br</a>.
+        </p>
+      </div>
+
+      <div class="footer">
+        <p>© 2025 Roomie · Todos os direitos reservados</p>
+        <p>Você está recebendo este e-mail porque possui um anúncio ativo na plataforma.</p>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
+
