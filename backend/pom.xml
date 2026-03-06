@@ -204,6 +204,9 @@
                                 <exclude>br/edu/ufape/roomie/service/FileStorageService.class</exclude>
                                 <exclude>br/edu/ufape/roomie/controller/ContractController.class</exclude>
                                 <exclude>br/edu/ufape/roomie/service/ContractService.class</exclude>
+                                <exclude>br/edu/ufape/roomie/controller/EvaluationController.class</exclude>
+                                <exclude>br/edu/ufape/roomie/service/EvaluationService.class</exclude>
+                                <exclude>br/edu/ufape/roomie/controller/NotificationController.class</exclude>
                             </excludes>
                         </configuration>
                     </execution>
