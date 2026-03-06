@@ -89,8 +89,7 @@ export class ChatDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
         this.loadProperty();
         this.startPolling();
       },
-      error: (err) => {
-        console.error('Erro ao carregar chat', err);
+      error: () => {
         this.toast.error('Erro ao carregar conversa.');
         this.router.navigate(['/chats']);
       }
@@ -105,8 +104,7 @@ export class ChatDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
         this.shouldScrollToBottom = true;
         this.cdr.detectChanges();
       },
-      error: (err) => {
-        console.error('Erro ao carregar mensagens', err);
+      error: () => {
         this.isLoading = false;
       }
     });
@@ -125,7 +123,7 @@ export class ChatDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
           this.cdr.detectChanges();
         }
       },
-      error: (err) => console.error('Erro no polling', err)
+      error: () => { /* polling errors are non-critical, next tick will retry */ }
     });
   }
 
@@ -142,8 +140,7 @@ export class ChatDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
         this.shouldScrollToBottom = true;
         this.cdr.detectChanges();
       },
-      error: (err) => {
-        console.error('Erro ao enviar mensagem', err);
+      error: () => {
         this.toast.error('Erro ao enviar mensagem.');
         this.isSending = false;
       }
@@ -178,7 +175,7 @@ export class ChatDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
         this.contracts = contracts;
         this.cdr.detectChanges();
       },
-      error: (err) => console.error('Erro ao carregar contratos', err)
+      error: () => { /* contracts are optional display info */ }
     });
   }
 
@@ -202,8 +199,7 @@ export class ChatDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
         this.loadContracts();
         this.loadProperty();
       },
-      error: (err) => {
-        console.error('Erro ao aceitar contrato', err);
+      error: () => {
         this.toast.error('Erro ao aceitar contrato.');
         this.isProcessingContract = false;
       }
@@ -219,8 +215,7 @@ export class ChatDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
         this.loadContracts();
         this.loadProperty();
       },
-      error: (err) => {
-        console.error('Erro ao recusar contrato', err);
+      error: () => {
         this.toast.error('Erro ao recusar contrato.');
         this.isProcessingContract = false;
       }

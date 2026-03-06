@@ -72,8 +72,7 @@ export class Home implements OnInit {
         this.isLoading = false;
         this.cdr.detectChanges();
       },
-      error: (err) => {
-        console.error('Erro ao buscar imóveis:', err);
+      error: () => {
         this.isLoading = false;
         this.cdr.detectChanges();
       }
