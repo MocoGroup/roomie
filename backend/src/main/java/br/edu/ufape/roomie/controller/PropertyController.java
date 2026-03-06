@@ -1,15 +1,8 @@
 package br.edu.ufape.roomie.controller;
 
-import br.edu.ufape.roomie.dto.PropertyRequestDTO;
-import br.edu.ufape.roomie.dto.PropertyResponseDTO;
-import br.edu.ufape.roomie.enums.PropertyStatus;
-import br.edu.ufape.roomie.model.Property;
-import br.edu.ufape.roomie.model.User;
-import br.edu.ufape.roomie.projection.PropertyDetailView;
-import br.edu.ufape.roomie.projection.PropertyRankingView;
-import br.edu.ufape.roomie.repository.PropertyRepository;
-import br.edu.ufape.roomie.service.PropertyService;
-import jakarta.validation.Valid;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.Map;
+import br.edu.ufape.roomie.dto.PropertyRequestDTO;
+import br.edu.ufape.roomie.dto.PropertyResponseDTO;
+import br.edu.ufape.roomie.enums.PropertyStatus;
+import br.edu.ufape.roomie.model.Property;
+import br.edu.ufape.roomie.model.User;
+import br.edu.ufape.roomie.projection.PropertyDetailView;
+import br.edu.ufape.roomie.projection.PropertyRankingView;
+import br.edu.ufape.roomie.repository.PropertyRepository;
+import br.edu.ufape.roomie.service.PropertyService;
+import jakarta.validation.Valid;
 
 
 @RestController
@@ -132,6 +133,8 @@ public class PropertyController {
             return ResponseEntity.noContent().build();
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
     }
 
@@ -142,6 +145,8 @@ public class PropertyController {
             return ResponseEntity.ok(Map.of("id", property.getId()));
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
