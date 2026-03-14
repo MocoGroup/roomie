@@ -6,6 +6,19 @@ import { Router } from '@angular/router';
 import { environment } from '../../enviroments/enviroment';
 import { InterestSummary } from '../models/interest-summary';
 import { InterestStatus } from '../models/interest-status.enum';
+import { PropertyDetailView } from '../models/property-detail-view';
+
+export interface AnnouncementConfirmationResponse {
+  id: number;
+  status: string;
+  confirmedStudentId: number;
+  message: string;
+}
+
+export interface AnnouncementLocalState {
+  properties: PropertyDetailView[];
+  interestsMap: Map<number, InterestSummary[]>;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +55,58 @@ export class InterestService {
         responseType: 'text'
       })
       .pipe(catchError(err => this.handleError(err)));
+  }
+
+  /**
+   * Confirma um estudante para uma vaga de um anúncio.
+   * @param propertyId ID do imóvel/anúncio
+   * @param studentId ID do estudante confirmado
+   */
+  confirmAnnouncement(propertyId: number, studentId: number): Observable<AnnouncementConfirmationResponse> {
+    return this.http
+      .patch<AnnouncementConfirmationResponse>(`${this.apiUrl}/${propertyId}/confirm`, null, {
+        params: { studentId }
+      })
+      .pipe(catchError(err => this.handleError(err)));
+  }
+
+  /**
+   * Atualiza estado local da vaga após confirmação, sem nova requisição de listagem.
+   */
+  applyConfirmationLocalState(
+    properties: PropertyDetailView[],
+    interestsMap: Map<number, InterestSummary[]>,
+    propertyId: number,
+    confirmedStudentId: number
+  ): AnnouncementLocalState {
+    const updatedProperties = properties.map(property => {
+      if (property.idImovel !== propertyId) return property;
+      return {
+        ...property,
+        status: 'RENTED',
+        vagasDisponiveis: 0
+      };
+    });
+
+    const updatedInterestsMap = new Map(interestsMap);
+    const interests = updatedInterestsMap.get(propertyId);
+    if (interests) {
+      updatedInterestsMap.set(
+        propertyId,
+        interests.map(interest => {
+          if (interest.studentId !== confirmedStudentId) return interest;
+          return {
+            ...interest,
+            status: InterestStatus.ACCEPTED
+          };
+        })
+      );
+    }
+
+    return {
+      properties: updatedProperties,
+      interestsMap: updatedInterestsMap
+    };
   }
 
   /**

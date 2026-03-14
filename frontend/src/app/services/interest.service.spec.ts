@@ -5,6 +5,7 @@ import { provideRouter, Router } from '@angular/router';
 import { InterestService } from './interest.service';
 import { InterestStatus } from '../models/interest-status.enum';
 import { InterestSummary } from '../models/interest-summary';
+import { PropertyDetailView } from '../models/property-detail-view';
 import { environment } from '../../enviroments/enviroment';
 
 describe('InterestService', () => {
@@ -172,6 +173,103 @@ describe('InterestService', () => {
       req.flush('Apenas o dono pode alterar', { status: 403, statusText: 'Forbidden' });
 
       expect(navigateSpy).toHaveBeenCalledWith(['/unauthorized']);
+    });
+  });
+
+  // ── confirmAnnouncement ────
+
+  describe('confirmAnnouncement()', () => {
+    it('deve fazer PATCH em /announcements/{id}/confirm com query param studentId', () => {
+      service.confirmAnnouncement(8, 44).subscribe(response => {
+        expect(response.id).toBe(8);
+        expect(response.status).toBe('RENTED');
+        expect(response.confirmedStudentId).toBe(44);
+      });
+
+      const req = httpMock.expectOne(r =>
+        r.url === `${BASE}/8/confirm` &&
+        r.params.get('studentId') === '44'
+      );
+      expect(req.request.method).toBe('PATCH');
+      req.flush({
+        id: 8,
+        status: 'RENTED',
+        confirmedStudentId: 44,
+        message: 'Estudante confirmado com sucesso na moradia.'
+      });
+    });
+
+    it('deve redirecionar para /unauthorized ao receber 403', () => {
+      const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValue(true);
+
+      service.confirmAnnouncement(8, 44).subscribe({ next: () => {}, error: () => {} });
+
+      const req = httpMock.expectOne(r => r.url === `${BASE}/8/confirm`);
+      req.flush('Apenas o dono pode confirmar', { status: 403, statusText: 'Forbidden' });
+
+      expect(navigateSpy).toHaveBeenCalledWith(['/unauthorized']);
+    });
+  });
+
+  // ── applyConfirmationLocalState ────
+
+  describe('applyConfirmationLocalState()', () => {
+    it('deve atualizar imóvel para RENTED e marcar candidato confirmado como ACCEPTED', () => {
+      const properties: PropertyDetailView[] = [
+        {
+          idImovel: 10,
+          titulo: 'Apartamento Central',
+          descricao: 'Desc',
+          tipo: 'APARTMENT',
+          preco: 1200,
+          generoMoradores: 'MIXTO',
+          aceitaAnimais: true,
+          temGaragem: false,
+          vagasDisponiveis: 2,
+          status: 'ACTIVE',
+          rua: 'Rua A',
+          numEndereco: '10',
+          bairro: 'Centro',
+          cidade: 'Garanhuns',
+          estado: 'PE',
+          cep: '55000-000',
+          nomeProprietario: 'Ana',
+          emailProprietario: 'ana@email.com'
+        }
+      ];
+
+      const interestsMap = new Map<number, InterestSummary[]>([
+        [
+          10,
+          [
+            {
+              interestId: 1,
+              studentId: 99,
+              studentName: 'Carlos',
+              major: 'SI',
+              institution: 'UFAPE',
+              status: InterestStatus.PENDING,
+              interestDate: '2026-03-05T10:00:00'
+            },
+            {
+              interestId: 2,
+              studentId: 77,
+              studentName: 'Lia',
+              major: 'CC',
+              institution: 'UFAPE',
+              status: InterestStatus.PENDING,
+              interestDate: '2026-03-05T11:00:00'
+            }
+          ]
+        ]
+      ]);
+
+      const result = service.applyConfirmationLocalState(properties, interestsMap, 10, 99);
+
+      expect(result.properties[0].status).toBe('RENTED');
+      expect(result.properties[0].vagasDisponiveis).toBe(0);
+      expect(result.interestsMap.get(10)?.find(i => i.studentId === 99)?.status).toBe(InterestStatus.ACCEPTED);
+      expect(result.interestsMap.get(10)?.find(i => i.studentId === 77)?.status).toBe(InterestStatus.PENDING);
     });
   });
 
