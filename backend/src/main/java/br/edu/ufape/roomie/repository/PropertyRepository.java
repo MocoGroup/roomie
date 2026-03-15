@@ -60,14 +60,14 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
             "FROM v_detalhes_imovel WHERE email_proprietario = :email", nativeQuery = true)
     List<PropertyDetailView> findMyDetails(@Param("email") String email);
 
-    @Query(value = "SELECT v.id_imovel AS idImovel, v.titulo, v.descricao, v.tipo, v.preco, " +
+    @Query(value = "SELECT DISTINCT v.id_imovel AS idImovel, v.titulo, v.descricao, v.tipo, v.preco, " +
             "v.genero_moradores AS generoMoradores, v.aceita_animais AS aceitaAnimais, " +
             "v.tem_garagem AS temGaragem, v.vagas_disponiveis AS vagasDisponiveis, v.status, " +
             "v.rua, v.num_endereco AS numEndereco, v.bairro, v.cidade, v.estado, v.cep, " +
             "v.nome_proprietario AS nomeProprietario, v.email_proprietario AS emailProprietario " +
             "FROM v_detalhes_imovel v " +
             "JOIN contrato_locacao c ON v.id_imovel = c.id_imovel " +
-            "WHERE c.id_estudante = :studentId AND c.status_contrato = 'ACTIVE'", nativeQuery = true)
-    List<PropertyDetailView> findResidentDetails(@Param("studentId") Long studentId);
+            "WHERE (c.id_estudante = :userId OR c.id_proprietario = :userId) AND c.status_contrato = 'ACTIVE'", nativeQuery = true)
+    List<PropertyDetailView> findResidentDetails(@Param("userId") Long userId);
 
 }

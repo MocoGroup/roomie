@@ -31,43 +31,39 @@ public class ExpenseService {
     private final ExpenseRepository expenseRepository;
     private final PropertyRepository propertyRepository;
     private final ContractRepository contractRepository;
-    private final StudentRepository studentRepository;
 
     public ExpenseService(ExpenseRepository expenseRepository, PropertyRepository propertyRepository,
-                          ContractRepository contractRepository, StudentRepository studentRepository) {
+                          ContractRepository contractRepository) {
         this.expenseRepository = expenseRepository;
         this.propertyRepository = propertyRepository;
         this.contractRepository = contractRepository;
-        this.studentRepository = studentRepository;
     }
 
-    private Student getAuthenticatedStudent() {
+    private User getAuthenticatedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated()) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuário não autenticado.");
         }
-        User user = (User) auth.getPrincipal();
-        return studentRepository.findById(user.getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Apenas estudantes podem acessar despesas."));
+        return (User) auth.getPrincipal();
     }
 
     @Transactional
     public ExpenseResponseDTO createExpense(ExpenseRequestDTO dto) {
-        Student student = getAuthenticatedStudent();
+        User user = getAuthenticatedUser();
 
         Property property = propertyRepository.findById(dto.getPropertyId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Imóvel não encontrado."));
 
-        boolean isResident = contractRepository.existsByPropertyIdAndStudentIdAndStatusIn(
-                property.getId(), student.getId(), List.of(ContractStatus.ACTIVE));
+        boolean hasContract = contractRepository.existsByPropertyIdAndUserIdAndStatusIn(
+                property.getId(), user.getId(), List.of(ContractStatus.ACTIVE));
 
-        if (!isResident) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Você não é um morador ativo desta moradia.");
+        if (!hasContract) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Você não possui um contrato ativo para esta moradia.");
         }
 
         Expense expense = new Expense();
         expense.setProperty(property);
-        expense.setRegisteredBy(student);
+        expense.setRegisteredBy(user);
         expense.setDescription(dto.getDescription());
         expense.setAmount(dto.getAmount());
         expense.setExpenseDate(dto.getExpenseDate());
@@ -77,13 +73,13 @@ public class ExpenseService {
 
     @Transactional(readOnly = true)
     public ExpenseSummaryDTO getExpensesByProperty(Long propertyId) {
-        Student student = getAuthenticatedStudent();
+        User user = getAuthenticatedUser();
 
-        boolean isResident = contractRepository.existsByPropertyIdAndStudentIdAndStatusIn(
-                propertyId, student.getId(), List.of(ContractStatus.ACTIVE));
+        boolean hasContract = contractRepository.existsByPropertyIdAndUserIdAndStatusIn(
+                propertyId, user.getId(), List.of(ContractStatus.ACTIVE));
 
-        if (!isResident) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Apenas moradores podem ver as despesas.");
+        if (!hasContract) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Apenas pessoas com contrato ativo podem ver as despesas.");
         }
 
         List<Expense> expenses = expenseRepository.findByPropertyId(propertyId);

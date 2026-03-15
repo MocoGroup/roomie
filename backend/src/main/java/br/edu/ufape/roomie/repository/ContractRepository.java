@@ -13,10 +13,10 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
 
     List<Contract> findByChatId(Long chatId);
 
-    @org.springframework.data.jpa.repository.Query("SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Contract c WHERE c.property.id = :propertyId AND c.student.id = :studentId AND c.status IN :statuses")
-    boolean existsByPropertyIdAndStudentIdAndStatusIn(
+    @org.springframework.data.jpa.repository.Query("SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Contract c WHERE c.property.id = :propertyId AND (c.student.id = :userId OR c.owner.id = :userId) AND c.status IN :statuses")
+    boolean existsByPropertyIdAndUserIdAndStatusIn(
             @org.springframework.data.repository.query.Param("propertyId") Long propertyId,
-            @org.springframework.data.repository.query.Param("studentId") Long studentId,
+            @org.springframework.data.repository.query.Param("userId") Long userId,
             @org.springframework.data.repository.query.Param("statuses") java.util.List<ContractStatus> statuses);
 
     List<Contract> findByPropertyIdAndStatus(Long propertyId, ContractStatus status);

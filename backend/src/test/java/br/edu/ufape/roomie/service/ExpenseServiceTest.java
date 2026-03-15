@@ -43,8 +43,6 @@ class ExpenseServiceTest {
     private PropertyRepository propertyRepository;
     @Mock
     private ContractRepository contractRepository;
-    @Mock
-    private StudentRepository studentRepository;
 
     @InjectMocks
     private ExpenseService expenseService;
@@ -58,7 +56,6 @@ class ExpenseServiceTest {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(mockStudent, null, null)
         );
-        lenient().when(studentRepository.findById(1L)).thenReturn(Optional.of(mockStudent));
     }
 
     @AfterEach
@@ -78,7 +75,7 @@ class ExpenseServiceTest {
         dto.setExpenseDate(LocalDate.now());
 
         when(propertyRepository.findById(10L)).thenReturn(Optional.of(property));
-        when(contractRepository.existsByPropertyIdAndStudentIdAndStatusIn(10L, 1L, List.of(ContractStatus.ACTIVE))).thenReturn(true);
+        when(contractRepository.existsByPropertyIdAndUserIdAndStatusIn(10L, 1L, List.of(ContractStatus.ACTIVE))).thenReturn(true);
         when(expenseRepository.save(any())).thenAnswer(i -> {
             Expense e = i.getArgument(0);
             e.setId(50L);
@@ -115,16 +112,6 @@ class ExpenseServiceTest {
     }
 
     @Test
-    @DisplayName("Deve lançar FORBIDDEN quando o estudante autenticado não for encontrado no repositório")
-    void getAuthenticatedStudent_whenStudentNotFound_throwsForbidden() {
-        when(studentRepository.findById(1L)).thenReturn(Optional.empty());
-
-        ResponseStatusException ex = assertThrows(ResponseStatusException.class, 
-                () -> expenseService.getExpensesByProperty(10L));
-        assertEquals(HttpStatus.FORBIDDEN, ex.getStatusCode());
-    }
-
-    @Test
     @DisplayName("Deve lançar NOT_FOUND quando o imóvel não for encontrado ao criar despesa")
     void createExpense_whenPropertyNotFound_throwsNotFound() {
         ExpenseRequestDTO dto = new ExpenseRequestDTO();
@@ -139,7 +126,7 @@ class ExpenseServiceTest {
     @Test
     @DisplayName("Deve lançar FORBIDDEN quando o estudante não for morador ao tentar ver despesas")
     void getExpensesByProperty_whenNotResident_throwsForbidden() {
-        when(contractRepository.existsByPropertyIdAndStudentIdAndStatusIn(10L, 1L, List.of(ContractStatus.ACTIVE))).thenReturn(false);
+        when(contractRepository.existsByPropertyIdAndUserIdAndStatusIn(10L, 1L, List.of(ContractStatus.ACTIVE))).thenReturn(false);
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, 
                 () -> expenseService.getExpensesByProperty(10L));
@@ -155,7 +142,7 @@ class ExpenseServiceTest {
         dto.setPropertyId(10L);
 
         when(propertyRepository.findById(10L)).thenReturn(Optional.of(property));
-        when(contractRepository.existsByPropertyIdAndStudentIdAndStatusIn(10L, 1L, List.of(ContractStatus.ACTIVE))).thenReturn(false);
+        when(contractRepository.existsByPropertyIdAndUserIdAndStatusIn(10L, 1L, List.of(ContractStatus.ACTIVE))).thenReturn(false);
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> expenseService.createExpense(dto));
         assertEquals(HttpStatus.FORBIDDEN, ex.getStatusCode());
@@ -169,7 +156,7 @@ class ExpenseServiceTest {
         Expense e2 = new Expense();
         e2.setId(2L); e2.setAmount(new BigDecimal("50.00")); e2.setRegisteredBy(mockStudent); e2.setExpenseDate(LocalDate.now());
 
-        when(contractRepository.existsByPropertyIdAndStudentIdAndStatusIn(10L, 1L, List.of(ContractStatus.ACTIVE))).thenReturn(true);
+        when(contractRepository.existsByPropertyIdAndUserIdAndStatusIn(10L, 1L, List.of(ContractStatus.ACTIVE))).thenReturn(true);
         when(expenseRepository.findByPropertyId(10L)).thenReturn(List.of(e1, e2));
 
         when(contractRepository.findByPropertyIdAndStatus(10L, ContractStatus.ACTIVE)).thenReturn(List.of(new Contract(), new Contract(), new Contract()));
@@ -191,7 +178,7 @@ class ExpenseServiceTest {
         e1.setRegisteredBy(mockStudent);
         e1.setExpenseDate(LocalDate.now());
 
-        when(contractRepository.existsByPropertyIdAndStudentIdAndStatusIn(10L, 1L, List.of(ContractStatus.ACTIVE))).thenReturn(true);
+        when(contractRepository.existsByPropertyIdAndUserIdAndStatusIn(10L, 1L, List.of(ContractStatus.ACTIVE))).thenReturn(true);
         when(expenseRepository.findByPropertyId(10L)).thenReturn(List.of(e1));
 
         when(contractRepository.findByPropertyIdAndStatus(10L, ContractStatus.ACTIVE)).thenReturn(List.of());
@@ -206,7 +193,7 @@ class ExpenseServiceTest {
     @Test
     @DisplayName("Deve retornar valor por morador igual a ZERO se não houver despesas, mas houver moradores")
     void shouldReturnZeroAmountPerResidentWhenNoExpensesButHasResidents() {
-        when(contractRepository.existsByPropertyIdAndStudentIdAndStatusIn(10L, 1L, List.of(ContractStatus.ACTIVE))).thenReturn(true);
+        when(contractRepository.existsByPropertyIdAndUserIdAndStatusIn(10L, 1L, List.of(ContractStatus.ACTIVE))).thenReturn(true);
         when(expenseRepository.findByPropertyId(10L)).thenReturn(List.of());
 
         when(contractRepository.findByPropertyIdAndStatus(10L, ContractStatus.ACTIVE)).thenReturn(List.of(new Contract(), new Contract()));

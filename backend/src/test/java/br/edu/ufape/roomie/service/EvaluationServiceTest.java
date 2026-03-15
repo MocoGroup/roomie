@@ -204,7 +204,7 @@ class EvaluationServiceTest {
         mockSecurityContext(authUser);
         when(studentRepository.findByEmail(authUser.getEmail())).thenReturn(Optional.of(student));
         when(propertyRepository.findById(10L)).thenReturn(Optional.of(property));
-        when(contractRepository.existsByPropertyIdAndStudentIdAndStatusIn(
+        when(contractRepository.existsByPropertyIdAndUserIdAndStatusIn(
                 eq(10L), eq(student.getId()), anyList())).thenReturn(false);
 
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
@@ -221,7 +221,7 @@ class EvaluationServiceTest {
         mockSecurityContext(authUser);
         when(studentRepository.findByEmail(authUser.getEmail())).thenReturn(Optional.of(student));
         when(propertyRepository.findById(10L)).thenReturn(Optional.of(property));
-        when(contractRepository.existsByPropertyIdAndStudentIdAndStatusIn(
+        when(contractRepository.existsByPropertyIdAndUserIdAndStatusIn(
                 eq(10L), eq(student.getId()), anyList())).thenReturn(true);
         when(evaluationRepository.findByPropertyIdAndStudentId(10L, student.getId()))
                 .thenReturn(Optional.of(new PropertyEvaluation()));
@@ -240,7 +240,7 @@ class EvaluationServiceTest {
         mockSecurityContext(authUser);
         when(studentRepository.findByEmail(authUser.getEmail())).thenReturn(Optional.of(student));
         when(propertyRepository.findById(10L)).thenReturn(Optional.of(property));
-        when(contractRepository.existsByPropertyIdAndStudentIdAndStatusIn(
+        when(contractRepository.existsByPropertyIdAndUserIdAndStatusIn(
                 eq(10L), eq(student.getId()), anyList())).thenReturn(true);
         when(evaluationRepository.findByPropertyIdAndStudentId(10L, student.getId()))
                 .thenReturn(Optional.empty());

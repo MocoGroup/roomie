@@ -58,7 +58,7 @@ public class EvaluationService {
                     "Você não pode avaliar seu próprio imóvel.");
         }
 
-        boolean hasContract = contractRepository.existsByPropertyIdAndStudentIdAndStatusIn(
+        boolean hasContract = contractRepository.existsByPropertyIdAndUserIdAndStatusIn(
                 propertyId, student.getId(),
                 List.of(ContractStatus.ACTIVE, ContractStatus.FINISHED));
         if (!hasContract) {
