@@ -13,6 +13,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -85,5 +87,80 @@ class AuthServiceTest {
             authService.register(userDTO);
         });
         verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao tentar registrar CPF já existente")
+    void testaExcecaoCpfJaExistente() {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setEmail("novo@ufape.edu.br");
+        userDTO.setCpf("11122233344");
+
+        when(userRepository.findByEmail(userDTO.getEmail())).thenReturn(null);
+        when(userRepository.findByCpf(userDTO.getCpf())).thenReturn(new User());
+
+        assertThrows(ResponseStatusException.class, () -> {
+            authService.register(userDTO);
+        });
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    @DisplayName("Deve registrar um usuário sem passar telefones (getPhones == null) e com Role nula assumindo USER")
+    void testaRegistroSemTelefoneERoleNula() {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setName("usuario sem tel");
+        userDTO.setEmail("semtel@ufape.edu.br");
+        userDTO.setCpf("00000000000");
+        userDTO.setPassword("123456");
+        userDTO.setRole(null); // Force role null
+        userDTO.setGender(UserGender.FEMALE);
+        userDTO.setPhones(null); // Force phones null
+
+        User savedUser = new User();
+        savedUser.setId(2L);
+        savedUser.setName(userDTO.getName());
+        savedUser.setEmail(userDTO.getEmail());
+        savedUser.setTelefones(null); // Force getting null for response configuration
+
+        when(userRepository.findByEmail(userDTO.getEmail())).thenReturn(null);
+        when(userRepository.findByCpf(userDTO.getCpf())).thenReturn(null);
+        when(passwordEncoder.encode(anyString())).thenReturn("hashed_password");
+        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+
+        UserResponseDTO response = authService.register(userDTO);
+
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(userCaptor.capture());
+
+        User userSalvoNoBanco = userCaptor.getValue();
+
+        assertThat(userSalvoNoBanco.getRole()).isEqualTo(UserRole.USER); // Assumed USER
+        assertThat(response).isNotNull();
+        assertThat(response.getPhones()).isNull(); // As it returns null when getTelefones is null
+    }
+
+    @Test
+    @DisplayName("Deve carregar o usuário pelo username (email) com sucesso")
+    void testaLoadUserByUsernameComSucesso() {
+        User user = new User();
+        user.setEmail("encontrado@email.com");
+
+        when(userRepository.findByEmail("encontrado@email.com")).thenReturn(user);
+
+        UserDetails userDetails = authService.loadUserByUsername("encontrado@email.com");
+
+        assertThat(userDetails).isNotNull();
+        assertThat(userDetails).isEqualTo(user);
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao buscar usuário por username e não encontrar")
+    void testaLoadUserByUsernameNaoEncontrado() {
+        when(userRepository.findByEmail("naoencontrado@email.com")).thenReturn(null);
+
+        assertThrows(UsernameNotFoundException.class, () -> {
+            authService.loadUserByUsername("naoencontrado@email.com");
+        });
     }
 }

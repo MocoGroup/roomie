@@ -95,8 +95,83 @@ class RecommendationServiceTest {
     }
 
     @Test
+    @DisplayName("Deve lidar com correntes em 0% mas que nao caem na exception do curso")
+    void testaCurrentUserSemMajor() {
+        Student currentUserSemCurso = criarEstudanteComHabito(1L, "Joao", "", null, "Futebol", "Fitness", "Diaria");
+        Student target = criarEstudanteComHabito(2L, "Zezinho", "Engenharia", StudySchedule.EVENING, "Nadar", "Noturno", "Mensal");
+
+        when(studentRepository.findByIdNot(currentUserSemCurso.getId())).thenReturn(List.of(target));
+
+        List<RoommateRecommendationDTO> recommendations = recommendationService.getRecommendations(currentUserSemCurso);
+
+        assertThat(recommendations).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Deve somar bonus caso o curso atual seja igual do target")
+    void testaCurrentUserBonusCourse() {
+        Student correnteComCurso = criarEstudanteComHabito(1L, "Joao", "Engenharia", StudySchedule.MORNING, "Futebol", "Fitness", "Diaria");
+        Student target = criarEstudanteComHabito(2L, "Zezinho", "Engenharia", StudySchedule.EVENING, "Futebol", "Fitness", "Diaria");
+
+        when(studentRepository.findByIdNot(correnteComCurso.getId())).thenReturn(List.of(target));
+
+        List<RoommateRecommendationDTO> recommendations = recommendationService.getRecommendations(correnteComCurso);
+
+        assertThat(recommendations).hasSize(1);
+        assertThat(recommendations.getFirst().getCommonInterests()).contains("Mesmo curso (Engenharia)");
+    }
+
+    @Test
     @DisplayName("Deve ignorar estudantes que ainda não possuem hábitos cadastrados")
     void testaIgnorarEstudantesSemHabitos() {
+        Student targetZero = criarEstudanteComHabito(2L, "Zezinho", "Engenharia", StudySchedule.EVENING, "Nadar", "Noturno", "Mensal");
+        when(studentRepository.findByIdNot(currentUser.getId())).thenReturn(List.of(targetZero));
+
+        List<RoommateRecommendationDTO> recommendations = recommendationService.getRecommendations(currentUser);
+
+        assertThat(recommendations).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Deve calcular corretamente quando listas de hábitos forem vazias")
+    void testaMatchComListasVazias() {
+        Student target = criarEstudanteComHabito(2L, "Maria Vazias", "Historia", null, null, null, null);
+        target.getHabit().setHobbies(List.of());
+        target.getHabit().setLifeStyles(List.of());
+        target.getHabit().setCleaningPrefs(List.of());
+
+        Student currentUserVazio = criarEstudanteComHabito(1L, "Joao Vazio", "Historia", null, null, null, null);
+        currentUserVazio.getHabit().setHobbies(List.of());
+        currentUserVazio.getHabit().setLifeStyles(List.of());
+        currentUserVazio.getHabit().setCleaningPrefs(List.of());
+
+        when(studentRepository.findByIdNot(currentUserVazio.getId())).thenReturn(List.of(target));
+
+        List<RoommateRecommendationDTO> recommendations = recommendationService.getRecommendations(currentUserVazio);
+        
+        // As they have the same major, "Mesmo curso (Historia)" is added, but no score from 1-4.
+        // Final score will be 0, so it gets filtered out by `dto.getCompatibilityPercentage() > 0`
+        assertThat(recommendations).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Deve lidar com target que nao tem study schedule sem quebrar")
+    void testaTargetSemStudySchedule() {
+        Student target = criarEstudanteComHabito(2L, "Pedro", "Letras", null, "Leitura", "Fitness", "Semanal");
+
+        when(studentRepository.findByIdNot(currentUser.getId())).thenReturn(List.of(target));
+
+        List<RoommateRecommendationDTO> recommendations = recommendationService.getRecommendations(currentUser);
+
+        // currentUser has study schedule morning, target has none. Match should be just lifeStyle
+        assertThat(recommendations).hasSize(1);
+        RoommateRecommendationDTO rec = recommendations.getFirst();
+        assertThat(rec.getStudySchedule()).isNull();
+    }
+
+    @Test
+    @DisplayName("Deve ignorar estudantes que ainda não possuem hábitos cadastrados (null)")
+    void testaIgnorarEstudantesSemHabitosTotalmente() {
         Student targetComHabito = criarEstudanteComHabito(2L, "Maria", "BCC", StudySchedule.MORNING, "Futebol", "Fitness", "Diária");
         Student targetSemHabito = new Student();
         targetSemHabito.setId(3L);
