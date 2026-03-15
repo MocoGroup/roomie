@@ -93,6 +93,60 @@ class ExpenseServiceTest {
     }
 
     @Test
+    @DisplayName("Deve lançar UNAUTHORIZED quando a autenticação for nula")
+    void getAuthenticatedStudent_whenAuthIsNull_throwsUnauthorized() {
+        SecurityContextHolder.getContext().setAuthentication(null);
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, 
+                () -> expenseService.getExpensesByProperty(10L));
+        assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Deve lançar UNAUTHORIZED quando a autenticação não estiver autenticada")
+    void getAuthenticatedStudent_whenNotAuthenticated_throwsUnauthorized() {
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(mockStudent, null, null);
+        auth.setAuthenticated(false);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, 
+                () -> expenseService.getExpensesByProperty(10L));
+        assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Deve lançar FORBIDDEN quando o estudante autenticado não for encontrado no repositório")
+    void getAuthenticatedStudent_whenStudentNotFound_throwsForbidden() {
+        when(studentRepository.findById(1L)).thenReturn(Optional.empty());
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, 
+                () -> expenseService.getExpensesByProperty(10L));
+        assertEquals(HttpStatus.FORBIDDEN, ex.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Deve lançar NOT_FOUND quando o imóvel não for encontrado ao criar despesa")
+    void createExpense_whenPropertyNotFound_throwsNotFound() {
+        ExpenseRequestDTO dto = new ExpenseRequestDTO();
+        dto.setPropertyId(99L);
+        when(propertyRepository.findById(99L)).thenReturn(Optional.empty());
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, 
+                () -> expenseService.createExpense(dto));
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Deve lançar FORBIDDEN quando o estudante não for morador ao tentar ver despesas")
+    void getExpensesByProperty_whenNotResident_throwsForbidden() {
+        when(contractRepository.existsByPropertyIdAndStudentIdAndStatusIn(10L, 1L, List.of(ContractStatus.ACTIVE))).thenReturn(false);
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, 
+                () -> expenseService.getExpensesByProperty(10L));
+        assertEquals(HttpStatus.FORBIDDEN, ex.getStatusCode());
+    }
+
+    @Test
     void shouldThrowForbiddenWhenNotResident() {
         Property property = new Property();
         property.setId(10L);
@@ -147,5 +201,21 @@ class ExpenseServiceTest {
         assertEquals(new BigDecimal("100.00"), result.getTotalAmount());
         assertEquals(0, result.getNumberOfResidents());
         assertEquals(BigDecimal.ZERO, result.getAmountPerResident());
+    }
+
+    @Test
+    @DisplayName("Deve retornar valor por morador igual a ZERO se não houver despesas, mas houver moradores")
+    void shouldReturnZeroAmountPerResidentWhenNoExpensesButHasResidents() {
+        when(contractRepository.existsByPropertyIdAndStudentIdAndStatusIn(10L, 1L, List.of(ContractStatus.ACTIVE))).thenReturn(true);
+        when(expenseRepository.findByPropertyId(10L)).thenReturn(List.of());
+
+        when(contractRepository.findByPropertyIdAndStatus(10L, ContractStatus.ACTIVE)).thenReturn(List.of(new Contract(), new Contract()));
+
+        ExpenseSummaryDTO result = expenseService.getExpensesByProperty(10L);
+
+        assertEquals(BigDecimal.ZERO, result.getTotalAmount());
+        assertEquals(2, result.getNumberOfResidents());
+        assertEquals(BigDecimal.ZERO, result.getAmountPerResident());
+        assertEquals(0, result.getExpenses().size());
     }
 }

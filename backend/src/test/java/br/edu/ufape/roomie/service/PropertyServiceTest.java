@@ -95,8 +95,23 @@ class PropertyServiceTest {
 
     private void authenticateUser(User user) {
         SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(user, null, null)
+                new UsernamePasswordAuthenticationToken(user, null, List.of())
         );
+    }
+
+    @Test
+    @DisplayName("Deve lançar erro 401 Unauthorized se o usuário não estiver autenticado (isAuthenticated false)")
+    void shouldThrowUnauthorizedWhenUserIsNotAuthenticated() {
+        var auth = mock(org.springframework.security.core.Authentication.class);
+        when(auth.isAuthenticated()).thenReturn(false);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+            propertyService.deleteProperty(50L);
+        });
+
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
+        assertEquals("Usuário não autenticado.", exception.getReason());
     }
 
     @Test
@@ -136,6 +151,44 @@ class PropertyServiceTest {
 
         verify(propertyRepository, times(1)).save(any(Property.class));
         verify(fileStorageService, times(1)).storeFile(any(MultipartFile.class));
+    }
+
+    @Test
+    @DisplayName("Deve criar imóvel com fotos nulas com sucesso")
+    void shouldCreatePropertyWithNullPhotosSuccessfully() {
+        authenticateUser(mockOwner);
+
+        when(propertyRepository.save(any(Property.class))).thenAnswer(invocation -> {
+            Property p = invocation.getArgument(0);
+            p.setId(11L);
+            return p;
+        });
+
+        Property result = propertyService.createProperty(validDto, null);
+
+        assertNotNull(result);
+        assertTrue(result.getPhotos().isEmpty());
+        verify(propertyRepository, times(1)).save(any(Property.class));
+        verify(fileStorageService, never()).storeFile(any());
+    }
+
+    @Test
+    @DisplayName("Deve criar imóvel com lista de fotos vazia com sucesso")
+    void shouldCreatePropertyWithEmptyPhotosListSuccessfully() {
+        authenticateUser(mockOwner);
+
+        when(propertyRepository.save(any(Property.class))).thenAnswer(invocation -> {
+            Property p = invocation.getArgument(0);
+            p.setId(12L);
+            return p;
+        });
+
+        Property result = propertyService.createProperty(validDto, Collections.emptyList());
+
+        assertNotNull(result);
+        assertTrue(result.getPhotos().isEmpty());
+        verify(propertyRepository, times(1)).save(any(Property.class));
+        verify(fileStorageService, never()).storeFile(any());
     }
 
     @Test
@@ -207,6 +260,20 @@ class PropertyServiceTest {
     }
 
     @Test
+    @DisplayName("Deve lançar erro 404 NotFound ao tentar publicar imóvel inexistente")
+    void shouldThrowNotFoundWhenPublishingNonExistentProperty() {
+        authenticateUser(mockOwner);
+        when(propertyRepository.findById(99L)).thenReturn(Optional.empty());
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+            propertyService.publishProperty(99L);
+        });
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        assertEquals("Imóvel não encontrado.", exception.getReason());
+    }
+
+    @Test
     @DisplayName("Deve deletar o imóvel com sucesso")
     void shouldDeletePropertySuccessfully() {
         authenticateUser(mockOwner);
@@ -243,6 +310,55 @@ class PropertyServiceTest {
     }
 
     @Test
+    @DisplayName("Deve lançar erro 404 NotFound ao tentar deletar imóvel inexistente")
+    void shouldThrowNotFoundWhenDeletingNonExistentProperty() {
+        authenticateUser(mockOwner);
+        when(propertyRepository.findById(99L)).thenReturn(Optional.empty());
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+            propertyService.deleteProperty(99L);
+        });
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        assertEquals("Imóvel não encontrado.", exception.getReason());
+    }
+
+    @Test
+    @DisplayName("Deve lançar erro 404 NotFound se imóvel não for encontrado ao tentar colocar em rascunho")
+    void shouldThrowNotFoundWhenSettingDraftNonExistentProperty() {
+        authenticateUser(mockOwner);
+        when(propertyRepository.findById(99L)).thenReturn(Optional.empty());
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+            propertyService.setPropertyToDraft(99L);
+        });
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        assertEquals("Imóvel não encontrado.", exception.getReason());
+    }
+
+    @Test
+    @DisplayName("Deve lançar erro 403 Forbidden ao tentar mudar para rascunho imóvel de outro dono")
+    void shouldThrowForbiddenWhenSettingDraftPropertyOfAnotherOwner() {
+        User impostor = new User();
+        impostor.setId(2L);
+        authenticateUser(impostor);
+
+        Property property = new Property();
+        property.setId(50L);
+        property.setOwner(mockOwner);
+
+        when(propertyRepository.findById(50L)).thenReturn(Optional.of(property));
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+            propertyService.setPropertyToDraft(50L);
+        });
+
+        assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
+        verify(propertyRepository, never()).save(any(Property.class));
+    }
+
+    @Test
     @DisplayName("Deve voltar o imóvel para rascunho (DRAFT) com sucesso")
     void shouldSetPropertyToDraftSuccessfully() {
         authenticateUser(mockOwner);
@@ -258,6 +374,41 @@ class PropertyServiceTest {
 
         assertEquals(PropertyStatus.DRAFT, result.getStatus());
         verify(propertyRepository, times(1)).save(property);
+    }
+
+    @Test
+    @DisplayName("Deve lançar erro 404 NotFound ao tentar atualizar um imóvel que não existe")
+    void shouldThrowNotFoundWhenUpdatingNonExistentProperty() {
+        authenticateUser(mockOwner);
+        when(propertyRepository.findById(99L)).thenReturn(Optional.empty());
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+            propertyService.updateProperty(99L, validDto, null);
+        });
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        assertEquals("Imóvel não encontrado.", exception.getReason());
+    }
+
+    @Test
+    @DisplayName("Deve lançar erro 403 Forbidden se o usuário tentar atualizar um imóvel de outro dono")
+    void shouldThrowForbiddenWhenUpdatingPropertyOfAnotherOwner() {
+        User impostor = new User();
+        impostor.setId(2L);
+        authenticateUser(impostor);
+
+        Property property = new Property();
+        property.setId(50L);
+        property.setOwner(mockOwner);
+
+        when(propertyRepository.findById(50L)).thenReturn(Optional.of(property));
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+            propertyService.updateProperty(50L, validDto, null);
+        });
+
+        assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
+        verify(propertyRepository, never()).save(any(Property.class));
     }
 
     @Test
@@ -283,6 +434,28 @@ class PropertyServiceTest {
         assertEquals(PropertyStatus.DRAFT, result.getStatus());
         assertEquals(1, result.getPhotos().size());
         assertEquals("/images/uuid-nova-foto.jpg", result.getPhotos().getFirst().getPath());
+    }
+
+    @Test
+    @DisplayName("Deve atualizar o imóvel mantendo a lista original caso mande novas fotos como lista vazia")
+    void shouldUpdatePropertyWithEmptyPhotosSuccessfully() {
+        authenticateUser(mockOwner);
+        Property property = new Property();
+        property.setId(50L);
+        property.setOwner(mockOwner);
+        property.setAddress(new Address());
+        property.setPhotos(new ArrayList<>());
+        property.setStatus(PropertyStatus.ACTIVE);
+
+        when(propertyRepository.findById(50L)).thenReturn(Optional.of(property));
+        when(propertyRepository.save(any(Property.class))).thenReturn(property);
+
+        Property result = propertyService.updateProperty(50L, validDto, Collections.emptyList());
+
+        assertEquals("Quarto Universitário", result.getTitle());
+        assertEquals(PropertyStatus.DRAFT, result.getStatus());
+        assertTrue(result.getPhotos().isEmpty());
+        verify(fileStorageService, never()).storeFile(any());
     }
 
     @Test
@@ -394,6 +567,64 @@ class PropertyServiceTest {
 
         assertEquals(PropertyStatus.ACTIVE, result.getStatus());
         assertEquals(1, result.getAvailableVacancies());
+    }
+
+    @Test
+    @DisplayName("Deve lançar erro 404 NotFound ao confirmar estudante em moradia que não existe")
+    void shouldThrowNotFoundWhenConfirmingStudentInNonExistentProperty() {
+        authenticateUser(mockOwner);
+        when(propertyRepository.findById(99L)).thenReturn(Optional.empty());
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+            propertyService.confirmStudent(99L, 5L);
+        });
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        assertEquals("Imóvel não encontrado.", exception.getReason());
+    }
+
+    @Test
+    @DisplayName("Deve lançar erro 404 NotFound ao tentar confirmar com estudante que não existe")
+    void shouldThrowNotFoundWhenConfirmingNonExistentStudent() {
+        authenticateUser(mockOwner);
+        Property property = new Property();
+        property.setId(10L);
+        property.setOwner(mockOwner);
+
+        when(propertyRepository.findById(10L)).thenReturn(Optional.of(property));
+        when(studentRepository.findById(99L)).thenReturn(Optional.empty());
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+            propertyService.confirmStudent(10L, 99L);
+        });
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        assertEquals("Estudante não encontrado.", exception.getReason());
+    }
+
+    @Test
+    @DisplayName("Deve confirmar um estudante e mudar status para RENTED quando vagas zerarem")
+    void shouldChangeStatusToRentedWhenVacanciesReachZero() {
+        authenticateUser(mockOwner);
+
+        Property property = new Property();
+        property.setId(10L);
+        property.setAvailableVacancies(1); // Somente 1 vaga para testar o zeramento e o status RENTED
+        property.setOwner(mockOwner);
+        property.setStatus(PropertyStatus.ACTIVE);
+
+        br.edu.ufape.roomie.model.Student student = new br.edu.ufape.roomie.model.Student();
+        student.setId(5L);
+
+        when(propertyRepository.findById(10L)).thenReturn(Optional.of(property));
+        when(studentRepository.findById(5L)).thenReturn(Optional.of(student));
+        when(interestRepository.existsByStudentAndProperty(student, property)).thenReturn(true);
+        when(propertyRepository.save(any(Property.class))).thenAnswer(i -> i.getArgument(0));
+
+        Property result = propertyService.confirmStudent(10L, 5L);
+
+        assertEquals(PropertyStatus.RENTED, result.getStatus());
+        assertEquals(0, result.getAvailableVacancies());
     }
 
     @Test

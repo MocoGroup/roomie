@@ -80,11 +80,14 @@ class NotificationServiceTest {
     }
 
     @Test
-    @DisplayName("Deve marcar todas as notificações como lidas")
+    @DisplayName("Deve marcar todas as notificações como lidas filtrando as já lidas")
     void shouldMarkAllNotificationsAsRead() {
         User user = new User();
         Notification n1 = new Notification(user, "Msg 1");
+        n1.setRead(false);
+        
         Notification n2 = new Notification(user, "Msg 2");
+        n2.setRead(true); // Esta já está lida, deve ser filtrada
 
         when(notificationRepository.findByRecipientOrderByCreatedAtDesc(user))
                 .thenReturn(List.of(n1, n2));
@@ -92,7 +95,63 @@ class NotificationServiceTest {
         notificationService.markAllAsRead(user);
 
         assertThat(n1.isRead()).isTrue();
-        assertThat(n2.isRead()).isTrue();
-        verify(notificationRepository).saveAll(anyList());
+        
+        ArgumentCaptor<List<Notification>> captor = ArgumentCaptor.forClass(List.class);
+        verify(notificationRepository).saveAll(captor.capture());
+        
+        List<Notification> savedList = captor.getValue();
+        assertThat(savedList).hasSize(1);
+        assertThat(savedList.get(0)).isEqualTo(n1);
+    }
+
+    @Test
+    @DisplayName("Deve marcar uma notificação como lida quando o usuário for o destinatário")
+    void shouldMarkAsReadWhenUserIsRecipient() {
+        User user = new User();
+        user.setId(1L);
+
+        Notification notification = new Notification(user, "Msg 1");
+        notification.setId(10L);
+
+        when(notificationRepository.findById(10L)).thenReturn(java.util.Optional.of(notification));
+
+        notificationService.markAsRead(10L, user);
+
+        assertThat(notification.isRead()).isTrue();
+        verify(notificationRepository).save(notification);
+    }
+
+    @Test
+    @DisplayName("Não deve marcar a notificação como lida se o usuário não for o destinatário")
+    void shouldNotMarkAsReadWhenUserIsNotRecipient() {
+        User user1 = new User();
+        user1.setId(1L);
+
+        User user2 = new User();
+        user2.setId(2L);
+
+        Notification notification = new Notification(user1, "Msg 1");
+        notification.setId(10L);
+        notification.setRead(false);
+
+        when(notificationRepository.findById(10L)).thenReturn(java.util.Optional.of(notification));
+
+        notificationService.markAsRead(10L, user2);
+
+        assertThat(notification.isRead()).isFalse();
+        verify(notificationRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Não deve fazer nada se a notificação não existir no markAsRead")
+    void shouldDoNothingWhenNotificationNotFound() {
+        User user = new User();
+        user.setId(1L);
+
+        when(notificationRepository.findById(10L)).thenReturn(java.util.Optional.empty());
+
+        notificationService.markAsRead(10L, user);
+
+        verify(notificationRepository, never()).save(any());
     }
 }

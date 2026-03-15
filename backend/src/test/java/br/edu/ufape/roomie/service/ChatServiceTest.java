@@ -200,6 +200,37 @@ class ChatServiceTest {
         assertThat(result.getFirst().getStudentName()).isEqualTo("Estudante");
     }
 
+    @Test
+    @DisplayName("Deve não duplicar chats caso o usuário esteja em ambos os papéis no mesmo chat")
+    void deveNãoDuplicarChatsAoListarDoUsuario() {
+        when(chatRepository.findByUserId(owner.getId())).thenReturn(List.of(chat));
+        when(chatRepository.findByStudentId(owner.getId())).thenReturn(List.of(chat));
+        when(messageRepository.countByChatIdAndReadFalseAndSenderIdNot(anyLong(), anyLong()))
+                .thenReturn(0L);
+
+        List<ChatResponseDTO> result = chatService.getChatsForUser(owner);
+
+        assertThat(result).hasSize(1);
+        assertThat(result.getFirst().getOwnerName()).isEqualTo("Proprietário");
+    }
+
+    @Test
+    @DisplayName("Deve simular chats duplicados e listagem completa ignorando seen.add se já visto no mesmo array")
+    void deveNãoDuplicarChatsDaMesmaFuncao() {
+        // Criando duas referências do mesmo chat só para testar a branch em que seen.add(c.getId()) é FALSE 
+        // durante o processamento do list original (asOwner)
+        when(chatRepository.findByUserId(owner.getId())).thenReturn(List.of(chat, chat));
+        when(chatRepository.findByStudentId(owner.getId())).thenReturn(List.of());
+        when(messageRepository.countByChatIdAndReadFalseAndSenderIdNot(anyLong(), anyLong()))
+                .thenReturn(0L);
+
+        List<ChatResponseDTO> result = chatService.getChatsForUser(owner);
+
+        // O Set garante que as duplicatas da MESMA consulta de banco não sejam tratadas de forma errada
+        assertThat(result).hasSize(1);
+        assertThat(result.getFirst().getOwnerName()).isEqualTo("Proprietário");
+    }
+
     // ── getChatById ────
 
     @Test
@@ -295,6 +326,21 @@ class ChatServiceTest {
     void deveLancarExcecaoComMensagemVazia() {
         MessageRequestDTO req = new MessageRequestDTO();
         req.setContent("   ");
+
+        when(chatRepository.findById(100L)).thenReturn(Optional.of(chat));
+
+        assertThatThrownBy(() -> chatService.sendMessage(100L, req, owner))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("O conteúdo da mensagem não pode ser vazio.");
+
+        verify(messageRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao enviar mensagem com conteúdo nulo")
+    void deveLancarExcecaoComMensagemNula() {
+        MessageRequestDTO req = new MessageRequestDTO();
+        req.setContent(null);
 
         when(chatRepository.findById(100L)).thenReturn(Optional.of(chat));
 
