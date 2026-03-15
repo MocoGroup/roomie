@@ -1,13 +1,13 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { of, BehaviorSubject } from 'rxjs';
-import { ChatWidgetComponent } from './chat-widget.component';
-import { ChatService } from '../../services/chat.service';
-import { ChatWidgetService } from '../../services/chat-widget.service';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { BehaviorSubject, of } from 'rxjs';
 import { Auth } from '../../auth/auth';
 import { Chat } from '../../models/chat.model';
 import { Message } from '../../models/message.model';
+import { ChatWidgetService } from '../../services/chat-widget.service';
+import { ChatService } from '../../services/chat.service';
+import { ChatWidgetComponent } from './chat-widget.component';
 
 const mockChat: Chat = {
   id: 100,

@@ -1,7 +1,7 @@
-import {Component, signal} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
-import {ToastContainerComponent} from './components/shared/toast/toast-container.component';
-import {ChatWidgetComponent} from './components/chat-widget/chat-widget.component';
+import { Component, signal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { ChatWidgetComponent } from './components/chat-widget/chat-widget.component';
+import { ToastContainerComponent } from './components/shared/toast/toast-container.component';
 
 @Component({
   selector: 'app-root',

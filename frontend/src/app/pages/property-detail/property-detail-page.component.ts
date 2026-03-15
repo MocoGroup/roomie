@@ -1,18 +1,18 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PropertyService } from '../../services/propertyService';
-import { FavoritesService } from '../../services/favorites.service';
-import { PropertyDetailView } from '../../models/property-detail-view';
-import { PropertyPhoto } from '../../models/property';
-import { HeaderComponent } from '../../components/shared/header/header.component';
-import { StarRatingComponent } from '../../components/star-rating/star-rating.component';
-import { EvaluationService } from '../../services/evaluation.service';
-import { EvaluationSummary } from '../../models/evaluation.model';
+import { take } from 'rxjs';
 import { environment } from '../../../enviroments/enviroment';
 import { Auth } from '../../auth/auth';
+import { HeaderComponent } from '../../components/shared/header/header.component';
+import { StarRatingComponent } from '../../components/star-rating/star-rating.component';
+import { EvaluationSummary } from '../../models/evaluation.model';
+import { PropertyPhoto } from '../../models/property';
+import { PropertyDetailView } from '../../models/property-detail-view';
+import { EvaluationService } from '../../services/evaluation.service';
+import { FavoritesService } from '../../services/favorites.service';
+import { PropertyService } from '../../services/propertyService';
 import { StudentService } from '../../services/student.service';
-import { take } from 'rxjs';
 
 @Component({
   selector: 'app-property-detail-page',

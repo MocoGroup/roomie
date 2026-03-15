@@ -1,12 +1,12 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { UserService } from '../../services/user.service';
-import { UpdateUserDto } from '../../models/user/update-user.dto';
-import { HeaderComponent } from '../shared/header/header.component';
-import { Auth } from '../../auth/auth';
 import { take } from 'rxjs';
+import { Auth } from '../../auth/auth';
+import { UpdateUserDto } from '../../models/user/update-user.dto';
 import { ToastService } from '../../services/toast.service';
+import { UserService } from '../../services/user.service';
+import { HeaderComponent } from '../shared/header/header.component';
 
 @Component({
   selector: 'app-profile-edit',

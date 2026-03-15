@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject, map, Observable} from 'rxjs';
-import {RoommateRecommendation} from '../models/roommate-recommendation';
-import {environment} from '../../enviroments/enviroment';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, map, Observable } from 'rxjs';
+import { environment } from '../../enviroments/enviroment';
+import { RoommateRecommendation } from '../models/roommate-recommendation';
 
 const IGNORED_STORAGE_KEY = 'roomie_ignored_recommendations';
 

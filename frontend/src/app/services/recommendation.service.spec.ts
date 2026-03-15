@@ -1,9 +1,9 @@
-import {TestBed} from '@angular/core/testing';
-import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
-import {provideHttpClient} from '@angular/common/http';
-import {RecommendationService} from './recommendation.service';
-import {RoommateRecommendation} from '../models/roommate-recommendation';
-import {environment} from '../../enviroments/enviroment';
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import { environment } from '../../enviroments/enviroment';
+import { RoommateRecommendation } from '../models/roommate-recommendation';
+import { RecommendationService } from './recommendation.service';
 
 describe('RecommendationService', () => {
   let service: RecommendationService;

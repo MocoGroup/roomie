@@ -1,9 +1,9 @@
-import {TestBed} from '@angular/core/testing';
-import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
-import {provideHttpClient} from '@angular/common/http';
-import {HabitService} from './habit.service';
-import {HabitRequest, HabitResponse} from '../models/habit';
-import {environment} from '../../enviroments/enviroment';
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import { environment } from '../../enviroments/enviroment';
+import { HabitRequest, HabitResponse } from '../models/habit';
+import { HabitService } from './habit.service';
 
 describe('HabitService', () => {
   let service: HabitService;

@@ -1,11 +1,11 @@
-import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {ActivatedRoute, Router} from '@angular/router';
-import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
-import {PropertyService} from './property.service';
-import {PropertyList} from '../components/property-list/property-list';
-import {HeaderComponent} from '../components/shared/header/header.component';
-import {Property} from '../models/property';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PropertyList } from '../components/property-list/property-list';
+import { HeaderComponent } from '../components/shared/header/header.component';
+import { Property } from '../models/property';
+import { PropertyService } from './property.service';
 
 @Component({
   selector: 'app-home',

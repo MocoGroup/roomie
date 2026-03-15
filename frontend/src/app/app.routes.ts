@@ -1,20 +1,20 @@
-import {Routes} from '@angular/router';
-import {authGuard} from './auth/auth-guard';
-import {Login} from './auth/login/login';
-import {Unauthorized} from './auth/unauthorized/unauthorized';
-import {Home} from './home/home';
-import {PropertyFormComponent} from './property-form/property-form';
-import {ProfileEditComponent} from './components/profile/profile-edit.component';
-import {StudentProfileComponent} from './components/student-profile/student-profile.component';
-import {MeusImoveis} from './pages/meus-imoveis/meus-imoveis';
-import {FavoritosComponent} from './pages/favoritos/favoritos.component';
-import {PropertyDetailPageComponent} from './pages/property-detail/property-detail-page.component';
-import {RecommendationsComponent} from './pages/recommendations/recommendations.component';
-import {HabitsComponent} from './pages/habits/habits.component';
-import {CandidatosDashboardComponent} from './pages/candidatos-dashboard/candidatos-dashboard';
-import {ChatListComponent} from './pages/chat/chat-list/chat-list.component';
-import {ChatDetailComponent} from './pages/chat/chat-detail/chat-detail.component';
-import {RelatoriosComponent} from './pages/relatorios/relatorios';
+import { Routes } from '@angular/router';
+import { authGuard } from './auth/auth-guard';
+import { Login } from './auth/login/login';
+import { Unauthorized } from './auth/unauthorized/unauthorized';
+import { ProfileEditComponent } from './components/profile/profile-edit.component';
+import { StudentProfileComponent } from './components/student-profile/student-profile.component';
+import { Home } from './home/home';
+import { CandidatosDashboardComponent } from './pages/candidatos-dashboard/candidatos-dashboard';
+import { ChatDetailComponent } from './pages/chat/chat-detail/chat-detail.component';
+import { ChatListComponent } from './pages/chat/chat-list/chat-list.component';
+import { FavoritosComponent } from './pages/favoritos/favoritos.component';
+import { HabitsComponent } from './pages/habits/habits.component';
+import { MeusImoveis } from './pages/meus-imoveis/meus-imoveis';
+import { PropertyDetailPageComponent } from './pages/property-detail/property-detail-page.component';
+import { RecommendationsComponent } from './pages/recommendations/recommendations.component';
+import { RelatoriosComponent } from './pages/relatorios/relatorios';
+import { PropertyFormComponent } from './property-form/property-form';
 
 export const routes: Routes = [
   {

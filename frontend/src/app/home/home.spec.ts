@@ -1,11 +1,11 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {Home} from './home';
-import {provideRouter} from '@angular/router';
-import {Auth} from '../auth/auth';
-import {ReactiveFormsModule} from '@angular/forms';
-import {By} from '@angular/platform-browser';
-import {PropertyService} from './property.service';
-import {of} from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { provideRouter } from '@angular/router';
+import { of } from 'rxjs';
+import { Auth } from '../auth/auth';
+import { Home } from './home';
+import { PropertyService } from './property.service';
 
 describe('Home', () => {
   let component: Home;

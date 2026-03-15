@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {StudentContactView} from '../models/student-contact-view';
-import {StudentEngagementView} from '../models/student-engagement-view';
-import {environment} from '../../enviroments/enviroment';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from '../../enviroments/enviroment';
+import { StudentContactView } from '../models/student-contact-view';
+import { StudentEngagementView } from '../models/student-engagement-view';
 
 export interface StudentProfileDto {
   userId: number;

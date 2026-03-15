@@ -1,13 +1,13 @@
-import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {CommonModule} from '@angular/common';
-import {ActivatedRoute, Router} from '@angular/router';
-import {PropertyType} from '../models/property-type.enum';
-import {PropertyPhoto} from '../models/property';
-import {PropertyService} from '../services/propertyService';
-import {HeaderComponent} from '../components/shared/header/header.component';
-import {environment} from '../../enviroments/enviroment';
-import {ToastService} from '../services/toast.service';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from '../../enviroments/enviroment';
+import { HeaderComponent } from '../components/shared/header/header.component';
+import { PropertyPhoto } from '../models/property';
+import { PropertyType } from '../models/property-type.enum';
+import { PropertyService } from '../services/propertyService';
+import { ToastService } from '../services/toast.service';
 
 @Component({
   selector: 'app-property-form',

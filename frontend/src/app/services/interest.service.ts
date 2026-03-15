@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError, EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { EMPTY, Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { environment } from '../../enviroments/enviroment';
-import { InterestSummary } from '../models/interest-summary';
 import { InterestStatus } from '../models/interest-status.enum';
+import { InterestSummary } from '../models/interest-summary';
 import { PropertyDetailView } from '../models/property-detail-view';
 
 export interface AnnouncementConfirmationResponse {

@@ -1,12 +1,12 @@
-import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
-import { InterestService } from './interest.service';
+import { environment } from '../../enviroments/enviroment';
 import { InterestStatus } from '../models/interest-status.enum';
 import { InterestSummary } from '../models/interest-summary';
 import { PropertyDetailView } from '../models/property-detail-view';
-import { environment } from '../../enviroments/enviroment';
+import { InterestService } from './interest.service';
 
 describe('InterestService', () => {
   let service: InterestService;

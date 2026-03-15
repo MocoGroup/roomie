@@ -1,8 +1,8 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterLink} from '@angular/router';
-import {Property} from '../../models/property';
-import {environment} from '../../../enviroments/enviroment';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { environment } from '../../../enviroments/enviroment';
+import { Property } from '../../models/property';
 
 @Component({
   selector: 'app-property-card',

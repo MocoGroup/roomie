@@ -1,20 +1,20 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { PropertyService } from '../../services/propertyService';
-import { UserService } from '../../services/user.service';
-import { InterestService } from '../../services/interest.service';
-import { ChatService } from '../../services/chat.service';
-import { ChatWidgetService } from '../../services/chat-widget.service';
-import { Auth } from '../../auth/auth';
-import { PropertyDetailView } from '../../models/property-detail-view';
-import { OwnerReportView } from '../../models/owner-report-view';
-import { InterestSummary } from '../../models/interest-summary';
-import { InterestStatus } from '../../models/interest-status.enum';
-import { HeaderComponent } from '../../components/shared/header/header.component';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { take } from 'rxjs';
+import { Auth } from '../../auth/auth';
+import { HeaderComponent } from '../../components/shared/header/header.component';
+import { InterestStatus } from '../../models/interest-status.enum';
+import { InterestSummary } from '../../models/interest-summary';
+import { OwnerReportView } from '../../models/owner-report-view';
+import { PropertyDetailView } from '../../models/property-detail-view';
+import { ChatWidgetService } from '../../services/chat-widget.service';
+import { ChatService } from '../../services/chat.service';
+import { InterestService } from '../../services/interest.service';
+import { PropertyService } from '../../services/propertyService';
 import { ToastService } from '../../services/toast.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-meus-imoveis',

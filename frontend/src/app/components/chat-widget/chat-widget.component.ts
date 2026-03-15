@@ -1,16 +1,13 @@
-import {
-  Component, OnInit, OnDestroy, AfterViewChecked,
-  ViewChild, ElementRef, ChangeDetectorRef
-} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, NavigationEnd } from '@angular/router';
-import { Subscription, filter } from 'rxjs';
-import { ChatService } from '../../services/chat.service';
-import { ChatWidgetService, WidgetState } from '../../services/chat-widget.service';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter, Subscription } from 'rxjs';
 import { Auth } from '../../auth/auth';
 import { Chat } from '../../models/chat.model';
 import { Message } from '../../models/message.model';
+import { ChatWidgetService, WidgetState } from '../../services/chat-widget.service';
+import { ChatService } from '../../services/chat.service';
 
 @Component({
   selector: 'app-chat-widget',

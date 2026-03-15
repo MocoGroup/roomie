@@ -1,6 +1,6 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {FilterPanelComponent} from './filter-panel.component';
-import {DEFAULT_FILTER_STATE, FilterState} from '../../models/filter-state';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DEFAULT_FILTER_STATE, FilterState } from '../../models/filter-state';
+import { FilterPanelComponent } from './filter-panel.component';
 
 describe('FilterPanelComponent', () => {
   let component: FilterPanelComponent;

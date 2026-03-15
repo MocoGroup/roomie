@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ContractService } from '../../../services/contract.service';
 import { ContractRequest } from '../../../models/contract.model';
+import { ContractService } from '../../../services/contract.service';
 
 @Component({
   selector: 'app-contract-form-modal',

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import {
   AbstractControl,
@@ -5,14 +6,13 @@ import {
   FormGroup,
   ReactiveFormsModule,
   ValidationErrors,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { Auth } from '../auth';
 import { firstValueFrom } from 'rxjs';
-import { RegisterData } from '../user.interface';
 import { ToastService } from '../../services/toast.service';
+import { Auth } from '../auth';
+import { RegisterData } from '../user.interface';
 
 @Component({
   selector: 'app-login',

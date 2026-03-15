@@ -1,6 +1,6 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {StudentCardComponent} from './student-card.component';
-import {RoommateRecommendation} from '../../models/roommate-recommendation';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RoommateRecommendation } from '../../models/roommate-recommendation';
+import { StudentCardComponent } from './student-card.component';
 
 const base: RoommateRecommendation = {
   studentId: 1,

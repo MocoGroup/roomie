@@ -1,7 +1,7 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {provideRouter} from '@angular/router';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
-import {PropertyCard} from './property-card';
+import { PropertyCard } from './property-card';
 
 describe('PropertyCard', () => {
   let component: PropertyCard;

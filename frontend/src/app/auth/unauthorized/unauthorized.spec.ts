@@ -1,6 +1,6 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {provideRouter, Router} from '@angular/router';
-import {Unauthorized} from './unauthorized';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter, Router } from '@angular/router';
+import { Unauthorized } from './unauthorized';
 
 describe('Unauthorized', () => {
   let component: Unauthorized;

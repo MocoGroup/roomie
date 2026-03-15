@@ -1,10 +1,10 @@
-import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ChatService } from './chat.service';
+import { TestBed } from '@angular/core/testing';
+import { environment } from '../../enviroments/enviroment';
 import { Chat } from '../models/chat.model';
 import { Message } from '../models/message.model';
-import { environment } from '../../enviroments/enviroment';
+import { ChatService } from './chat.service';
 
 describe('ChatService', () => {
   let service: ChatService;

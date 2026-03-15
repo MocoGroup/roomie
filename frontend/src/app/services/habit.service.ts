@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {HabitRequest, HabitResponse} from '../models/habit';
-import {environment} from '../../enviroments/enviroment';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from '../../enviroments/enviroment';
+import { HabitRequest, HabitResponse } from '../models/habit';
 
 @Injectable({
   providedIn: 'root'

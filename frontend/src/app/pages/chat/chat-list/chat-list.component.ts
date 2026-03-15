@@ -1,11 +1,11 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { ChatService } from '../../../services/chat.service';
-import { Auth } from '../../../auth/auth';
-import { Chat } from '../../../models/chat.model';
-import { HeaderComponent } from '../../../components/shared/header/header.component';
 import { take } from 'rxjs';
+import { Auth } from '../../../auth/auth';
+import { HeaderComponent } from '../../../components/shared/header/header.component';
+import { Chat } from '../../../models/chat.model';
+import { ChatService } from '../../../services/chat.service';
 
 @Component({
   selector: 'app-chat-list',

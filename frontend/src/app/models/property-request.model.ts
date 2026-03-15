@@ -1,4 +1,4 @@
-import {PropertyType} from './property-type.enum';
+import { PropertyType } from './property-type.enum';
 
 export interface Address {
   street: string;

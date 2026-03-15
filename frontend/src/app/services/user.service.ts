@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {UserResponseDto} from '../models/user/user-response.dto';
-import {UpdateUserDto} from '../models/user/update-user.dto';
-import {OwnerReportView} from '../models/owner-report-view';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { OwnerReportView } from '../models/owner-report-view';
+import { UpdateUserDto } from '../models/user/update-user.dto';
+import { UserResponseDto } from '../models/user/user-response.dto';
 
 import { environment } from '../../enviroments/enviroment';
 

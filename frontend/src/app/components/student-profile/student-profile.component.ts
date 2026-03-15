@@ -1,13 +1,13 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { take } from 'rxjs';
 import { Auth } from '../../auth/auth';
 import { StudentService } from '../../services/student.service';
+import { ToastService } from '../../services/toast.service';
 import { UserService } from '../../services/user.service';
 import { HeaderComponent } from '../shared/header/header.component';
-import { take } from 'rxjs';
-import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-student-profile',

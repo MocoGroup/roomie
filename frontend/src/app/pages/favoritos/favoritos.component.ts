@@ -1,8 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FavoritesService, FavoriteProperty } from '../../services/favorites.service';
 import { HeaderComponent } from '../../components/shared/header/header.component';
+import { FavoriteProperty, FavoritesService } from '../../services/favorites.service';
 
 @Component({
   selector: 'app-favoritos',

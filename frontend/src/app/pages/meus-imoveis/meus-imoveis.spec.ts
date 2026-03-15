@@ -2,14 +2,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 
-import { MeusImoveis } from './meus-imoveis';
-import { PropertyService } from '../../services/propertyService';
-import { UserService } from '../../services/user.service';
-import { InterestService } from '../../services/interest.service';
 import { Auth } from '../../auth/auth';
-import { ToastService } from '../../services/toast.service';
 import { InterestStatus } from '../../models/interest-status.enum';
 import { InterestSummary } from '../../models/interest-summary';
+import { InterestService } from '../../services/interest.service';
+import { PropertyService } from '../../services/propertyService';
+import { ToastService } from '../../services/toast.service';
+import { UserService } from '../../services/user.service';
+import { MeusImoveis } from './meus-imoveis';
 
 describe('MeusImoveis', () => {
   let component: MeusImoveis;

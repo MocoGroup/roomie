@@ -1,14 +1,14 @@
-import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {Router} from '@angular/router';
-import {RecommendationService} from '../../services/recommendation.service';
-import {HabitService} from '../../services/habit.service';
-import {RoommateRecommendation} from '../../models/roommate-recommendation';
-import {HabitResponse} from '../../models/habit';
-import {HeaderComponent} from '../../components/shared/header/header.component';
-import {StudentCardComponent} from '../../components/student-card/student-card.component';
-import {FilterPanelComponent} from '../../components/filter-panel/filter-panel.component';
-import {DEFAULT_FILTER_STATE, FilterState} from '../../models/filter-state';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { FilterPanelComponent } from '../../components/filter-panel/filter-panel.component';
+import { HeaderComponent } from '../../components/shared/header/header.component';
+import { StudentCardComponent } from '../../components/student-card/student-card.component';
+import { DEFAULT_FILTER_STATE, FilterState } from '../../models/filter-state';
+import { HabitResponse } from '../../models/habit';
+import { RoommateRecommendation } from '../../models/roommate-recommendation';
+import { HabitService } from '../../services/habit.service';
+import { RecommendationService } from '../../services/recommendation.service';
 
 @Component({
   selector: 'app-recommendations',

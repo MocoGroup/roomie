@@ -1,17 +1,17 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { PropertyService } from '../../services/propertyService';
-import { InterestService } from '../../services/interest.service';
-import { ChatService } from '../../services/chat.service';
-import { ChatWidgetService } from '../../services/chat-widget.service';
-import { PropertyDetailView } from '../../models/property-detail-view';
-import { InterestSummary } from '../../models/interest-summary';
-import { InterestStatus } from '../../models/interest-status.enum';
 import { HeaderComponent } from '../../components/shared/header/header.component';
+import { InterestStatus } from '../../models/interest-status.enum';
+import { InterestSummary } from '../../models/interest-summary';
+import { PropertyDetailView } from '../../models/property-detail-view';
+import { ChatWidgetService } from '../../services/chat-widget.service';
+import { ChatService } from '../../services/chat.service';
+import { InterestService } from '../../services/interest.service';
+import { PropertyService } from '../../services/propertyService';
 import { ToastService } from '../../services/toast.service';
 
 export type StatusFilter = 'ALL' | InterestStatus;

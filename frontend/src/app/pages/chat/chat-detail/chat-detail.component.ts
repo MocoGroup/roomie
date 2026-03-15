@@ -1,28 +1,23 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ViewChild,
-  ElementRef,
-  AfterViewChecked,
-  ChangeDetectorRef
-} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {
+  AfterViewChecked,
+  ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { interval, Subscription, take } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { Auth } from '../../../auth/auth';
+import { HeaderComponent } from '../../../components/shared/header/header.component';
+import { Chat } from '../../../models/chat.model';
+import { ContractResponse } from '../../../models/contract.model';
+import { Message } from '../../../models/message.model';
+import { Property } from '../../../models/property';
 import { ChatService } from '../../../services/chat.service';
 import { ContractService } from '../../../services/contract.service';
 import { PropertyService } from '../../../services/propertyService';
-import { Auth } from '../../../auth/auth';
-import { Chat } from '../../../models/chat.model';
-import { Message } from '../../../models/message.model';
-import { ContractResponse } from '../../../models/contract.model';
-import { Property } from '../../../models/property';
-import { HeaderComponent } from '../../../components/shared/header/header.component';
-import { ContractFormModalComponent } from '../contract-form-modal/contract-form-modal.component';
 import { ToastService } from '../../../services/toast.service';
+import { ContractFormModalComponent } from '../contract-form-modal/contract-form-modal.component';
 
 @Component({
   selector: 'app-chat-detail',

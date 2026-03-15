@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -7,15 +8,14 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output,
+  Output
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { Auth } from '../../../auth/auth';
-import { NotificationService } from '../../../services/notification.service';
-import { AppNotification } from '../../../models/notification.model';
-import { Subscription, interval } from 'rxjs';
+import { interval, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { Auth } from '../../../auth/auth';
+import { AppNotification } from '../../../models/notification.model';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-header',

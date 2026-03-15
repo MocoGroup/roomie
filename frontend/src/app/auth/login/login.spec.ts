@@ -1,13 +1,13 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Login } from './login';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideRouter, Router } from '@angular/router';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Auth } from '../auth';
+import { provideRouter, Router } from '@angular/router';
 import { of } from 'rxjs';
-import { LoginResponse } from '../user.interface';
 import { ToastService } from '../../services/toast.service';
+import { Auth } from '../auth';
+import { LoginResponse } from '../user.interface';
+import { Login } from './login';
 
 describe('Login', () => {
   let component!: Login;

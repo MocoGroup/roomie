@@ -1,9 +1,9 @@
-import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject, Observable, tap} from 'rxjs';
-import {jwtDecode} from 'jwt-decode';
-import {LoginResponse, RegisterData, User, UserRole} from './user.interface';
-import {environment} from '../../enviroments/enviroment';
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { jwtDecode } from 'jwt-decode';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { environment } from '../../enviroments/enviroment';
+import { LoginResponse, RegisterData, User, UserRole } from './user.interface';
 
 interface JwtPayloadCustom {
   id: number;

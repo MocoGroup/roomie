@@ -1,10 +1,10 @@
-import {Component, inject, OnInit, ChangeDetectorRef} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {Router} from '@angular/router';
-import {HabitService} from '../../services/habit.service';
-import {HabitRequest} from '../../models/habit';
-import {HeaderComponent} from '../../components/shared/header/header.component';
-import {ToastService} from '../../services/toast.service';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { HeaderComponent } from '../../components/shared/header/header.component';
+import { HabitRequest } from '../../models/habit';
+import { HabitService } from '../../services/habit.service';
+import { ToastService } from '../../services/toast.service';
 
 interface HabitOption {
   label: string;

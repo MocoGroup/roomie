@@ -1,11 +1,11 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {Property} from '../models/property';
-import {PropertyDetailView} from '../models/property-detail-view';
-import {PropertyRankingView} from '../models/property-ranking-view';
-import {environment} from '../../enviroments/enviroment';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { environment } from '../../enviroments/enviroment';
+import { Property } from '../models/property';
+import { PropertyDetailView } from '../models/property-detail-view';
+import { PropertyRankingView } from '../models/property-ranking-view';
 
 
 @Injectable({
