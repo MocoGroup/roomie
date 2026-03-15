@@ -1,12 +1,14 @@
 package br.edu.ufape.roomie.controller;
 
-import br.edu.ufape.roomie.dto.StudentDTO;
-import br.edu.ufape.roomie.projection.StudentContactView;
-import br.edu.ufape.roomie.repository.StudentRepository;
-import br.edu.ufape.roomie.service.StudentService;
-import br.edu.ufape.roomie.service.TokenService;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.security.autoconfigure.UserDetailsServiceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
@@ -18,13 +20,16 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import br.edu.ufape.roomie.dto.StudentDTO;
+import br.edu.ufape.roomie.projection.StudentContactView;
+import br.edu.ufape.roomie.projection.StudentEngagementView;
+import br.edu.ufape.roomie.repository.StudentRepository;
+import br.edu.ufape.roomie.service.StudentService;
+import br.edu.ufape.roomie.service.TokenService;
 
 @WebMvcTest(controllers = StudentController.class, excludeAutoConfiguration = UserDetailsServiceAutoConfiguration.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -118,6 +123,38 @@ class StudentControllerTest {
         when(studentRepository.findContactById(99L)).thenReturn(Optional.empty());
 
         var response = mvc.perform(get("/api/students/99")).andReturn().getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    @DisplayName("GET /api/students/engagement deve retornar 200 com lista de engajamento")
+    void getAllEngagement_returns200WithList() throws Exception {
+        StudentEngagementView engagement = mock(StudentEngagementView.class);
+        when(studentRepository.findAllEngagement()).thenReturn(List.of(engagement));
+
+        var response = mvc.perform(get("/api/students/engagement")).andReturn().getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("GET /api/students/{id}/engagement deve retornar 200 quando encontrado")
+    void getEngagementById_found_returns200() throws Exception {
+        StudentEngagementView engagement = mock(StudentEngagementView.class);
+        when(studentRepository.findEngagementById(1L)).thenReturn(Optional.of(engagement));
+
+        var response = mvc.perform(get("/api/students/1/engagement")).andReturn().getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("GET /api/students/{id}/engagement deve retornar 404 quando não encontrado")
+    void getEngagementById_notFound_returns404() throws Exception {
+        when(studentRepository.findEngagementById(99L)).thenReturn(Optional.empty());
+
+        var response = mvc.perform(get("/api/students/99/engagement")).andReturn().getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
