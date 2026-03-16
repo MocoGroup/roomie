@@ -30,6 +30,12 @@ public class FileStorageService {
       Files.createDirectories(configuredLocation);
       return configuredLocation;
     } catch (IOException configuredPathError) {
+      if (Files.exists(configuredLocation) && !Files.isDirectory(configuredLocation)) {
+        throw new IllegalStateException(
+            "Não foi possível criar o diretório onde os arquivos serão armazenados.",
+            configuredPathError);
+      }
+
       Path fallbackLocation =
           Paths.get(System.getProperty("java.io.tmpdir"), "roomie", "uploads")
               .toAbsolutePath()
