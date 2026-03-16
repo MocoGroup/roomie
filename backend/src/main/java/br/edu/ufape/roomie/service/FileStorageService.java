@@ -6,23 +6,21 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service
 public class FileStorageService {
 
+  private static final Logger log = LoggerFactory.getLogger(FileStorageService.class);
+
   private final Path fileStorageLocation;
 
-  private static final Logger log = LoggerFactory.getLogger(FileStorageService.class);
   public FileStorageService(@Value("${app.storage.upload-dir:uploads/imoveis}") String uploadDir) {
-    this.fileStorageLocation = Paths.get(uploadDir).toAbsolutePath().normalize();
-
-    try {
     Path configuredLocation = Paths.get(uploadDir).toAbsolutePath().normalize();
     this.fileStorageLocation = ensureWritableStoragePath(configuredLocation);
   }
@@ -49,6 +47,8 @@ public class FileStorageService {
             fallbackError);
       }
     }
+  }
+
   public String storeFile(MultipartFile file) {
     String rawFileName = file.getOriginalFilename();
     if (rawFileName == null || rawFileName.isBlank()) {
